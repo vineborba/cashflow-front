@@ -33,13 +33,13 @@ const routes: Route[] = [
 
 export function Header() {
   return (
-    <header className="p-2 flex w-full justify-between shrink-0 border border-gray-300">
-      <nav className="flex gap-3 mg:gap-4 lg:gap-6 max-w-[1280px] w-full mx-auto">
+    <header className="flex w-full shrink-0 justify-between border border-gray-300 p-2">
+      <nav className="mg:gap-4 mx-auto flex w-full max-w-[1280px] gap-3 lg:gap-6">
         {routes.map(({ location, label, Icon }) => (
           <NavLink
             to={location}
             key={location}
-            className="flex flex-row gap-1 items-center"
+            className="flex flex-row items-center gap-1"
           >
             {({ isActive }) => (
               <>
@@ -48,7 +48,7 @@ export function Header() {
                   className={isActive ? "stroke-2" : "stroke-1"}
                 />
                 <span
-                  className={`text-base md:text-lg ${isActive ? "font-bold stroke-3" : "font-normal"}`}
+                  className={`text-xs md:text-base lg:text-lg ${isActive ? "stroke-3 font-bold" : "font-normal"}`}
                 >
                   {label}
                 </span>

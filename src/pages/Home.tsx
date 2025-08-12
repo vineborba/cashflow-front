@@ -36,29 +36,53 @@ const transactions = [
   },
 ];
 
-const accounts = [
-  { id: "1", bank: "Banco do Brasil", balance: 100000, type: "corrente" },
-  { id: "2", bank: "Banco Itaú", balance: 1000000, type: "poupança" },
-  { id: "3", bank: "Banco Inter", balance: -100000, type: "corrente" },
-  { id: "4", bank: "Nubank", balance: 100000, type: "investimentos" },
-  { id: "5", bank: "Sicredi", balance: 100000, type: "corrente" },
+const accounts: Account[] = [
+  {
+    id: "1",
+    name: "abab",
+    bank: "Banco do Brasil",
+    balance: 100000,
+    type: "checking",
+  },
+  {
+    id: "2",
+    name: "abab",
+    bank: "Banco Itaú",
+    balance: 1000000,
+    type: "savings",
+  },
+  {
+    id: "3",
+    name: "abab",
+    bank: "Banco Inter",
+    balance: -100000,
+    type: "checking",
+  },
+  {
+    id: "4",
+    name: "abab",
+    bank: "Nubank",
+    balance: 100000,
+    type: "investment",
+  },
+  { id: "5", name: "abab", bank: "Sicredi", balance: 100000, type: "checking" },
 ];
 
 export function Home() {
   return (
     <>
-      <div className="flex flex-row w-full justify-between mb-6">
+      <div className="mb-6 flex w-full flex-row justify-between">
         <PageTitle>Painel</PageTitle>
         <Button>Acionar transação</Button>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+      <div className="grid grid-cols-2 gap-4 md:gap-8 lg:grid-cols-4">
         {cards.map((c) => (
           <ResumeCard key={c.title} title={c.title} value={c.value} />
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-8">
+      <div className="mt-4 grid grid-cols-1 gap-8 md:grid-cols-2">
         <TransactionsSummary transactions={transactions} />
         <AccountsSummary accounts={accounts} />
       </div>

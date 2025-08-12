@@ -3,7 +3,7 @@ import { AppRouter } from "./Router";
 
 function App() {
   return (
-    <main className="w-dvw h-dvh flex flex-col">
+    <main className="flex h-dvh w-dvw flex-col">
       <Header />
       <AppRouter />
     </main>

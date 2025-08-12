@@ -5,7 +5,7 @@ type ButtonProps = {} & ButtonHTMLAttributes<HTMLButtonElement>;
 export function Button({ children, className, ...rest }: ButtonProps) {
   return (
     <button
-      className={`rounded-md bg-black text-white py-2 px-4 cursor-pointer font-bold ${className}`}
+      className={`cursor-pointer rounded-md bg-black px-4 py-2 font-bold text-white ${className}`}
       {...rest}
     >
       {children}

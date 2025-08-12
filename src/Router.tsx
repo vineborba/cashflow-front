@@ -7,7 +7,7 @@ import { Accounts } from "./pages/Accounts";
 
 function RootLayout() {
   return (
-    <section className="flex grow flex-col max-w-[1280px] w-full mx-auto py-8 px-2 md:px-6">
+    <section className="mx-auto flex w-full max-w-[1280px] grow flex-col px-2 py-8 md:px-6">
       <Outlet />
     </section>
   );

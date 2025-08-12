@@ -1,23 +1,25 @@
+import { accountTypeLabel } from "../utils/accountInfo";
 import { formatMonetaryValue } from "../utils/formatMonetaryValue";
-
-type Account = {
-  type: string;
-  bank: string;
-  balance: number;
-  id: string;
-};
+import { AccountIcon } from "./accounts/AccountIcon";
 
 type AccountSummaryItemProps = {} & Omit<Account, "id">;
 
-function AccountSummaryItem({ type, balance, bank }: AccountSummaryItemProps) {
+function AccountSummaryItem({
+  type,
+  balance,
+  bank,
+  name,
+}: AccountSummaryItemProps) {
   return (
-    <li className="flex items-center gap-2 flex-row">
-      <div className="p-2 rounded-full bg-green-300">icone</div>
-      <div className="flex flex-col grow">
-        <p className="font-bold text-base">{type}</p>
-        <p className="text-sm text-slate-600">{bank}</p>
+    <li className="flex flex-row items-center gap-2">
+      <AccountIcon type={type} size={32} />
+      <div className="flex grow flex-col">
+        <p className="text-base font-bold">{accountTypeLabel[type]}</p>
+        <p className="text-sm text-slate-600">
+          {name} - {bank}
+        </p>
       </div>
-      <p className="font-bold text-lg">{formatMonetaryValue(balance)}</p>
+      <p className="text-lg font-bold">{formatMonetaryValue(balance)}</p>
     </li>
   );
 }
@@ -28,7 +30,7 @@ type AccountSummaryProps = {
 
 export function AccountsSummary({ accounts }: AccountSummaryProps) {
   return (
-    <article className="p-4 border border-slate-300 flex flex-col gap-2 rounded-lg">
+    <article className="flex flex-col gap-2 rounded-lg border border-slate-300 p-4">
       <h6 className="text-2xl font-bold">Resumo das contas</h6>
       <p className="text-slate-600">Visão geral das suas contas bancárias</p>
       <ul className="gap-2">
@@ -38,6 +40,7 @@ export function AccountsSummary({ accounts }: AccountSummaryProps) {
             balance={acc.balance}
             bank={acc.bank}
             type={acc.type}
+            name={acc.name}
           />
         ))}
       </ul>
