@@ -16,6 +16,9 @@ export default tseslint.config([
       reactHooks.configs["recommended-latest"],
       reactRefresh.configs.vite,
     ],
+    rules: {
+      'react-hooks/react-compiler': 'error',
+    },
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -24,6 +27,6 @@ export default tseslint.config([
   {
     plugins: {
       reactQuery
-    }
+    },
   }
 ]);
