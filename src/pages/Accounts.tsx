@@ -1,7 +1,10 @@
-import { AccountsList } from "../components/accounts/AccountsList";
-import { Button } from "../components/Button";
-import { PageTitle } from "../components/PageTitle";
-import { ResumeCard } from "../components/ResumeCard";
+import { useState } from "react";
+
+import { AccountsList } from "@app/components/accounts/AccountsList";
+import { Button } from "@app/components/Button";
+import { PageTitle } from "@app/components/PageTitle";
+import { ResumeCard } from "@app/components/ResumeCard";
+import { NewAccountDialog } from "@app/components/accounts/NewAccountDialog";
 
 const cards = [
   {
@@ -18,36 +21,18 @@ const cards = [
   },
 ];
 
-const accounts: Account[] = [
-  {
-    balance: 123123,
-    bank: "Itaú",
-    id: crypto.randomUUID(),
-    type: "savings",
-    name: "Minha poupança",
-  },
-  {
-    balance: 1223,
-    bank: "Nubank",
-    id: crypto.randomUUID(),
-    type: "checking",
-    name: "Conta do roxinho",
-  },
-  {
-    balance: 1223,
-    bank: "XP",
-    id: crypto.randomUUID(),
-    type: "investment",
-    name: "Investimentos",
-  },
-];
-
 export function Accounts() {
+  const [openDialog, setOpenDialog] = useState(false);
+
   return (
     <>
+      <NewAccountDialog
+        isOpen={openDialog}
+        close={() => setOpenDialog(false)}
+      />
       <div className="mb-6 flex w-full flex-row justify-between">
         <PageTitle>Contas</PageTitle>
-        <Button>Acionar conta</Button>
+        <Button onClick={() => setOpenDialog(true)}>Acionar conta</Button>
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8">
@@ -66,7 +51,7 @@ export function Accounts() {
           Gerencie suas contas bancárias
         </h2>
 
-        <AccountsList accounts={accounts} />
+        <AccountsList />
       </section>
     </>
   );

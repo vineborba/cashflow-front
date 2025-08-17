@@ -1,14 +1,25 @@
-import { accountTypeLabel } from "../../utils/accountInfo";
-import { formatMonetaryValue } from "../../utils/formatMonetaryValue";
+import { useAccounts } from "@app/hooks/useAccounts";
+import { accountTypeLabel } from "@app/utils/accountInfo";
+import { formatMonetaryValue } from "@app/utils/formatMonetaryValue";
 
 import { AccountIcon } from "./AccountIcon";
 
-function AccountListItem({ balance, bank, type, name }: Account) {
+type AccountListItemProps = Omit<
+  Account,
+  "createdAt" | "updatedAt" | "bankCode"
+>;
+
+function AccountListItem({
+  balance,
+  bank,
+  type,
+  description,
+}: AccountListItemProps) {
   return (
     <li className="grid grid-cols-6 gap-1 border border-b-0 border-gray-300 p-2 first:rounded-t-lg last:rounded-b-lg last:border-b md:py-3">
       <div className="col-span-2 flex flex-row items-center gap-2">
         <AccountIcon type={type} />
-        <p className="text-xs md:text-sm lg:text-base">{name}</p>
+        <p className="text-xs md:text-sm lg:text-base">{description}</p>
       </div>
       <p className="text-center text-xs md:text-sm lg:text-base">{bank}</p>
       <p className="text-center text-xs md:text-sm lg:text-base">
@@ -21,11 +32,19 @@ function AccountListItem({ balance, bank, type, name }: Account) {
   );
 }
 
-type AccountsListProps = {
-  accounts: Account[];
-};
+export function AccountsList() {
+  const { accounts } = useAccounts();
 
-export function AccountsList({ accounts }: AccountsListProps) {
+  if (!accounts.length) {
+    return (
+      <article className="rounded-lg border border-gray-300 p-12">
+        <p className="text-center text-gray-500">
+          Oops! Parece que não há nenhuma conta registrada no momento!
+        </p>
+      </article>
+    );
+  }
+
   return (
     <ul>
       {accounts.map((acc) => (
@@ -35,7 +54,7 @@ export function AccountsList({ accounts }: AccountsListProps) {
           balance={acc.balance}
           bank={acc.bank}
           type={acc.type}
-          name={acc.name}
+          description={acc.description}
         />
       ))}
     </ul>

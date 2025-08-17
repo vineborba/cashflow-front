@@ -36,38 +36,6 @@ const transactions = [
   },
 ];
 
-const accounts: Account[] = [
-  {
-    id: "1",
-    name: "abab",
-    bank: "Banco do Brasil",
-    balance: 100000,
-    type: "checking",
-  },
-  {
-    id: "2",
-    name: "abab",
-    bank: "Banco Itaú",
-    balance: 1000000,
-    type: "savings",
-  },
-  {
-    id: "3",
-    name: "abab",
-    bank: "Banco Inter",
-    balance: -100000,
-    type: "checking",
-  },
-  {
-    id: "4",
-    name: "abab",
-    bank: "Nubank",
-    balance: 100000,
-    type: "investment",
-  },
-  { id: "5", name: "abab", bank: "Sicredi", balance: 100000, type: "checking" },
-];
-
 export function Home() {
   return (
     <>
@@ -84,7 +52,7 @@ export function Home() {
 
       <div className="mt-4 grid grid-cols-1 gap-8 md:grid-cols-2">
         <TransactionsSummary transactions={transactions} />
-        <AccountsSummary accounts={accounts} />
+        <AccountsSummary />
       </div>
     </>
   );
