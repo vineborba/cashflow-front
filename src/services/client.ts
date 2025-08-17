@@ -6,6 +6,9 @@ const cookieJar = new CookieJar();
 export const apiClient = ky.create({
   prefixUrl: import.meta.env.VITE_API_URL,
   credentials: "include",
+  headers: {
+    "Content-Type": "application/json",
+  },
   hooks: {
     beforeRequest: [
       async (request) => {

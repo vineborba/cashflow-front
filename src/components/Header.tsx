@@ -1,6 +1,9 @@
 import { NavLink } from "react-router";
-import { CreditCard, DollarSign, Home, PieChart } from "lucide-react";
+import { CreditCard, DollarSign, Home, PieChart, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+
+import { useAuth } from "@app/contexts/Auth";
 
 type Route = {
   label: string;
@@ -32,6 +35,10 @@ const routes: Route[] = [
 ];
 
 export function Header() {
+  const { isAuthenticated, signOut, user } = useAuth();
+
+  if (!isAuthenticated) return null;
+
   return (
     <header className="flex w-full shrink-0 justify-between border border-gray-300 p-2">
       <nav className="mg:gap-4 mx-auto flex w-full max-w-[1280px] gap-3 lg:gap-6">
@@ -56,6 +63,26 @@ export function Header() {
             )}
           </NavLink>
         ))}
+        <Popover className="relative ml-auto">
+          <PopoverButton className="cursor-pointer">
+            <User />
+          </PopoverButton>
+          <PopoverPanel
+            anchor="bottom end"
+            className="mt-1 flex flex-col rounded-md bg-white shadow-sm"
+          >
+            <p className="p-2">
+              Olá, <span className="font-bold">{user?.name}!</span>
+            </p>
+            <hr className="border-gray-300" />
+            <button
+              className="cursor-pointer p-2 font-semibold"
+              onClick={signOut}
+            >
+              Sair
+            </button>
+          </PopoverPanel>
+        </Popover>
       </nav>
     </header>
   );

@@ -4,11 +4,15 @@ import { tv } from "tailwind-variants";
 import type { VariantProps } from "tailwind-variants";
 
 const variants = tv({
-  base: "rounded-md px-4 py-2 font-bold",
+  base: "rounded-md px-4 py-2 font-bold cursor-pointer",
   variants: {
     variant: {
-      primary: "bg-black text-white",
-      secondary: "bg-white text-black border border-black",
+      primary: "bg-black text-white active:bg-white active:text-black",
+      secondary:
+        "bg-white text-black border border-black active:bg-black active:text-white",
+    },
+    size: {
+      full: "w-full block",
     },
   },
 });
@@ -21,10 +25,11 @@ export function Button({
   children,
   variant = "primary",
   type = "button",
+  size,
   ...rest
 }: ButtonProps) {
   return (
-    <HButton className={variants({ variant })} type={type} {...rest}>
+    <HButton className={variants({ variant, size })} type={type} {...rest}>
       {children}
     </HButton>
   );

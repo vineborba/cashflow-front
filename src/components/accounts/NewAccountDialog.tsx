@@ -51,6 +51,7 @@ export function NewAccountDialog({ isOpen, close }: NewAccountDialogProps) {
       .replace(",", ".");
 
     await createAccount({ ...data, bankCode, balance: +formattedBalance });
+    close();
   }
 
   return (
