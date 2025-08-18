@@ -7,9 +7,10 @@ const variants = tv({
   base: "rounded-md px-4 py-2 font-bold cursor-pointer",
   variants: {
     variant: {
-      primary: "bg-black text-white active:bg-white active:text-black",
+      primary:
+        "bg-black text-white active:bg-white active:text-black disabled:bg-gray-200",
       secondary:
-        "bg-white text-black border border-black active:bg-black active:text-white",
+        "bg-white text-black border border-black active:bg-black active:text-white disabled:border-gray-200 disabled:text-gray-200",
     },
     size: {
       full: "w-full block",
@@ -25,11 +26,16 @@ export function Button({
   children,
   variant = "primary",
   type = "button",
+  className = "",
   size,
   ...rest
 }: ButtonProps) {
   return (
-    <HButton className={variants({ variant, size })} type={type} {...rest}>
+    <HButton
+      className={`${variants({ variant, size })} ${className}`}
+      type={type}
+      {...rest}
+    >
       {children}
     </HButton>
   );

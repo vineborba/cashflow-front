@@ -1,9 +1,14 @@
-import { Link, Navigate } from "react-router";
+import { Link, useSearchParams } from "react-router";
+import { useEffect, useState } from "react";
 
 import { Button } from "@app/components/Button";
 import { Input } from "@app/components/Input";
+import { AccountActivatedDialog } from "@app/components/AccountActivatedDialog";
 
 import { useAuth } from "@app/contexts/Auth";
+import { useLoader } from "@app/contexts/Loader";
+
+import { authService } from "@app/services/auth.service";
 import { transformFormDataToJson } from "@app/utils/transformFormDataToJson";
 
 type SignInForm = {
@@ -12,11 +17,35 @@ type SignInForm = {
 };
 
 export function SignIn() {
-  const { signIn, isAuthenticated } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+  const { signIn } = useAuth();
+  const { addLoader, removeLoader } = useLoader();
+
+  async function activateAccount(token: string) {
+    addLoader("account-ativate");
+    try {
+      await authService.activateAccount(token);
+      setIsOpen(true);
+    } catch (error) {
+      console.error("Failed to ativate account", error);
+    }
+    removeLoader("account-ativate");
   }
+
+  useEffect(() => {
+    const activateToken = searchParams.get("activate");
+    if (activateToken) {
+      activateAccount(activateToken);
+      setSearchParams((prev) => {
+        prev.delete("activate");
+        return prev;
+      });
+    }
+  }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,9 +62,19 @@ export function SignIn() {
           Entre agora e comece a controlar suas finanças!
         </h2>
         <form onSubmit={onSubmit} className="space-y-4">
-          <Input name="email" label="E-mail" />
-          <Input name="password" label="Senha" />
-          <Button type="submit" size="full">
+          <Input
+            name="email"
+            label="E-mail"
+            placeholder="Seu e-mail"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            name="password"
+            label="Senha"
+            placeholder="Sua senha"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button type="submit" size="full" disabled={!email || !password}>
             Confirmar
           </Button>
           <span className="block text-center">
@@ -46,6 +85,8 @@ export function SignIn() {
           </span>
         </form>
       </article>
+
+      <AccountActivatedDialog isOpen={isOpen} close={() => setIsOpen(false)} />
     </>
   );
 }

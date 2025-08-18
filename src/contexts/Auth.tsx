@@ -1,5 +1,3 @@
-import { authService } from "@app/services/auth.service";
-import { userService } from "@app/services/user.service";
 import {
   createContext,
   use,
@@ -7,6 +5,11 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
+
+import { authService } from "@app/services/auth.service";
+import { userService } from "@app/services/user.service";
+
+import { useLoader } from "./Loader";
 
 type AuthContextValue = {
   user: User | null;
@@ -22,6 +25,16 @@ type AuthProviderProps = PropsWithChildren;
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [initialLoad, setInitialLoad] = useState(true);
+
+  const { addLoader, removeLoader } = useLoader();
+
+  useEffect(() => {
+    if (initialLoad) {
+      addLoader("auth");
+    } else {
+      removeLoader("auth");
+    }
+  }, [initialLoad]);
 
   async function loadUser() {
     try {
@@ -51,7 +64,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     user,
     signIn,
     signOut,
-    isAuthenticated: initialLoad || !!user,
+    isAuthenticated: !!user,
   };
 
   return (
