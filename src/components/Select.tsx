@@ -23,7 +23,7 @@ export function Select({ label, error, options, ...rest }: SelectProps) {
       <Label className="text-sm text-gray-700">{label}</Label>
       <HSelect
         {...rest}
-        className="block w-full rounded-md border! border-gray-500 px-2 py-1"
+        className="block w-full rounded-md border border-gray-500 px-2 py-1"
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value} className="leading-6">

@@ -45,7 +45,7 @@ export function SignIn() {
         return prev;
       });
     }
-  }, []);
+  }, [activateAccount, searchParams, setSearchParams]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -73,6 +73,7 @@ export function SignIn() {
             label="Senha"
             placeholder="Sua senha"
             onChange={(e) => setPassword(e.target.value)}
+            type="password"
           />
           <Button type="submit" size="full" disabled={!email || !password}>
             Confirmar

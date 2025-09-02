@@ -58,12 +58,14 @@ export function SignUp() {
             label="Senha"
             placeholder="Sua senha"
             onChange={(e) => setPassword(e.target.value)}
+            type="password"
           />
           <Input
             name="confirm-password"
             label="Confirmar senha"
             placeholder="Confirme sua senha"
             onChange={(e) => setConfirmPassword(e.target.value)}
+            type="password"
           />
           <Button type="submit" size="full" disabled={disableButton}>
             Confirmar
