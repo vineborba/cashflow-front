@@ -4,7 +4,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 import { globalIgnores } from "eslint/config";
-import reactQuery from '@tanstack/eslint-plugin-query';
+import reactQuery from "@tanstack/eslint-plugin-query";
 
 export default tseslint.config([
   globalIgnores(["dist"]),
@@ -13,12 +13,8 @@ export default tseslint.config([
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs["recommended-latest"],
       reactRefresh.configs.vite,
     ],
-    rules: {
-      'react-hooks/react-compiler': 'error',
-    },
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -26,7 +22,14 @@ export default tseslint.config([
   },
   {
     plugins: {
-      reactQuery
+      reactQuery,
     },
-  }
+  },
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    plugins: {
+      "react-hooks": reactHooks,
+    },
+    extends: ["react-hooks/recommended"],
+  },
 ]);
