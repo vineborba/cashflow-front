@@ -13,7 +13,7 @@ import { transformFormDataToJson } from "@app/utils/transformFormDataToJson";
 import { Button } from "../Button";
 import { CurrencyMaskedInput } from "../CurrencyMaskedInput";
 import { Input } from "../Input";
-import { Listbox } from "../ListBox";
+import { Listbox } from "../Listbox";
 
 type NewBudgetDialogProps = {
   isOpen: boolean;
