@@ -23,19 +23,6 @@ const cards = [
   },
 ];
 
-const transactions = [
-  { id: "1", title: "salário", date: "25/03/2025", value: 10000 },
-  { id: "2", title: "mercado", date: "25/03/2025", value: 10 },
-  { id: "3", title: "café", date: "25/03/2025", value: 100 },
-  { id: "4", title: "bar", date: "25/03/2025", value: 1000000 },
-  {
-    id: "5",
-    title: "pagamento de dividendos",
-    date: "25/03/2025",
-    value: 10000,
-  },
-];
-
 export function Home() {
   return (
     <>
@@ -51,7 +38,7 @@ export function Home() {
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-8 md:grid-cols-2">
-        <TransactionsSummary transactions={transactions} />
+        <TransactionsSummary />
         <AccountsSummary />
       </div>
     </>

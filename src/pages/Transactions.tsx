@@ -8,7 +8,7 @@ import { Select } from "@app/components/Select";
 import { TransactionsList } from "@app/components/transactions/TransactionsList";
 
 export function Transactions() {
-  const [openDialog, setOpenDialog] = useState(false);
+  const [_openDialog, setOpenDialog] = useState(false);
   const [query, setQuery] = useState("");
 
   const { tags } = useTags();
