@@ -9,14 +9,25 @@ import {
 import type { InputProps as HInputProps } from "@headlessui/react";
 import { Eye, EyeOff } from "lucide-react";
 
-type InputProps = { label: string; error?: string } & HInputProps;
+type InputProps = {
+  label?: string;
+  error?: string;
+  containerClassName?: string;
+} & HInputProps;
 
-export function Input({ label, error, className, type, ...rest }: InputProps) {
+export function Input({
+  label,
+  error,
+  className = "",
+  containerClassName = "",
+  type = "text",
+  ...rest
+}: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Field className="relative">
-      <Label className="text-sm text-gray-700">{label}</Label>
+    <Field className={`relative ${containerClassName}`}>
+      {label && <Label className="text-sm text-gray-700">{label}</Label>}
       <HInput
         {...rest}
         type={showPassword ? "text" : type}

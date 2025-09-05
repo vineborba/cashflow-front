@@ -13,17 +13,17 @@ type Option = {
 
 type SelectProps = {
   options: Option[];
-  label: string;
+  label?: string;
   error?: string;
 } & HSelectProps;
 
 export function Select({ label, error, options, ...rest }: SelectProps) {
   return (
-    <Field>
-      <Label className="text-sm text-gray-700">{label}</Label>
+    <Field className="w-full self-stretch md:w-fit">
+      {label && <Label className="text-sm text-gray-700">{label}</Label>}
       <HSelect
         {...rest}
-        className="block w-full rounded-md border border-gray-500 px-2 py-1"
+        className="block h-full w-full rounded-md border border-gray-500 px-2 py-1 leading-6!"
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value} className="leading-6">

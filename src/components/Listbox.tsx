@@ -17,7 +17,7 @@ type Option = {
 
 type ListboxProps = {
   options: Option[];
-  label: string;
+  label?: string;
   error?: string;
   emptyStateMessage?: string;
 } & HListboxProps;
@@ -32,7 +32,7 @@ export function Listbox({
 }: ListboxProps) {
   return (
     <Field>
-      <Label className="text-sm text-gray-700">{label}</Label>
+      {label && <Label className="text-sm text-gray-700">{label}</Label>}
       <HListbox multiple={multiple} {...rest}>
         <ListboxButton className="block w-full rounded-md border border-gray-500 px-2 py-1 text-left">
           {({ value }) =>

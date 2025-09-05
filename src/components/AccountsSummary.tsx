@@ -30,12 +30,17 @@ function AccountSummaryItem({
 
 export function AccountsSummary() {
   const { accounts } = useAccounts();
+
+  if (!accounts.length) {
+    return null;
+  }
+
   return (
     <article className="flex flex-col gap-2 rounded-lg border border-slate-300 p-4">
       <h6 className="text-2xl font-bold">Resumo das contas</h6>
       <p className="text-slate-600">Visão geral das suas contas bancárias</p>
       <ul className="gap-2">
-        {accounts.map((acc) => (
+        {accounts.slice(0, 6).map((acc) => (
           <AccountSummaryItem
             key={acc.id}
             balance={acc.balance}
