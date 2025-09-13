@@ -8,7 +8,7 @@ export const useTransactions = ({
   type = "",
   range = "",
   page = 1,
-  limit = 15,
+  limit = 10,
 }: ListTransactionsParams = {}) => {
   const queryClient = useQueryClient();
 

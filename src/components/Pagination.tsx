@@ -19,8 +19,6 @@ export function Pagination({ pageCount, onPageChange }: PaginationProps) {
       previousLabel="< "
       nextLabel=" >"
       breakLabel="..."
-      marginPagesDisplayed={1}
-      pageRangeDisplayed={2}
       renderOnZeroPageCount={null}
       nextAriaLabel="Próxima página"
       previousAriaLabel="Página anterior"
