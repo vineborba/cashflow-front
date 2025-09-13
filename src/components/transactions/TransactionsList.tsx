@@ -26,11 +26,11 @@ function TransactionListItem({
         {description}
       </p>
       <TagsList tags={tags} />
-      <p className="text-left text-xs md:text-sm lg:text-base">
+      <p className="my-auto text-left text-xs md:text-sm lg:text-base">
         {formattedDate}
       </p>
       <p
-        className={`text-right text-xs lg:text-base ${isIncome ? "before:content['+'] text-green-500" : ""}`}
+        className={`my-auto text-right text-xs lg:text-base ${isIncome ? "before:content['+'] text-green-500" : ""}`}
       >
         {isIncome ? "+" + formatedValue : formatedValue}
       </p>
