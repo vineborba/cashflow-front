@@ -21,7 +21,7 @@ export const useTransactions = () => {
       queryClient.setQueryData<Transaction[]>(["transactions"], (state) => {
         if (!state) return [data];
 
-        return [...state, data];
+        return [data, ...state];
       });
     },
   });

@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+/* DatePicker Overrides */
+.react-datepicker__header {
+  background-color: var(--color-black) !important;
+}
+
+.react-datepicker__current-month {
+  color: var(--color-white) !important;
+  text-transform: capitalize !important;
+}
+
+.react-datepicker__day--selected {
+  background-color: var(--color-emerald-500) !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: var(--color-emerald-200) !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: var(--color-white) !important;
+}

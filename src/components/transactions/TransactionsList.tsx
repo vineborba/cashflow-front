@@ -41,8 +41,6 @@ function TransactionListItem({
 export function TransactionsList() {
   const { transactions } = useTransactions();
 
-  console.log(transactions);
-
   if (!transactions.length) {
     return (
       <article className="rounded-lg border border-gray-300 p-12">

@@ -6,9 +6,10 @@ import { Input } from "@app/components/Input";
 import { useTags } from "@app/hooks/useTags";
 import { Select } from "@app/components/Select";
 import { TransactionsList } from "@app/components/transactions/TransactionsList";
+import { NewTransactionDialog } from "@app/components/transactions/NewTransactionDialog";
 
 export function Transactions() {
-  const [_openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [query, setQuery] = useState("");
 
   const { tags } = useTags();
@@ -37,6 +38,11 @@ export function Transactions() {
 
   return (
     <>
+      <NewTransactionDialog
+        isOpen={openDialog}
+        close={() => setOpenDialog(false)}
+      />
+
       <div className="mb-6 flex w-full flex-row justify-between">
         <PageTitle>Transações</PageTitle>
         <Button onClick={() => setOpenDialog(true)}>Adicionar transação</Button>
