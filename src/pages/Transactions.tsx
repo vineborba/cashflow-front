@@ -10,7 +10,10 @@ import { NewTransactionDialog } from "@app/components/transactions/NewTransactio
 
 export function Transactions() {
   const [openDialog, setOpenDialog] = useState(false);
-  const [query, setQuery] = useState("");
+  const [description, setDescription] = useState("");
+  const [rangeQuery, setRangeQuery] = useState("");
+  const [typeQuery, setTypeQuery] = useState("");
+  const [tagQuery, setTagQuery] = useState("");
 
   const { tags } = useTags();
 
@@ -36,6 +39,13 @@ export function Transactions() {
     { value: "180", label: "Últimos 180 dias" },
   ];
 
+  function resetFilters() {
+    setDescription("");
+    setTagQuery("");
+    setTypeQuery("");
+    setRangeQuery("");
+  }
+
   return (
     <>
       <NewTransactionDialog
@@ -53,21 +63,47 @@ export function Transactions() {
 
         <article className="mt-2 mb-4 flex w-full flex-wrap items-center gap-2">
           <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             containerClassName="md:max-w-3xs lg:max-w-sm w-full self-stretch"
             className="h-full"
             placeholder="Buscar por descrição"
           />
-          <Select options={tagsOptions} />
-          <Select options={typeOptions} />
-          <Select options={rangeOptions} />
-          <div className="space-x-2 xl:ml-auto">
-            <Button className="">Filtrar</Button>
-            <Button variant="secondary">Limpar filtros</Button>
-          </div>
+          <Select
+            options={tagsOptions}
+            value={tagQuery}
+            onChange={(e) => {
+              setTagQuery(e.target.value);
+            }}
+          />
+          <Select
+            options={typeOptions}
+            value={typeQuery}
+            onChange={(e) => {
+              setTypeQuery(e.target.value);
+            }}
+          />
+          <Select
+            options={rangeOptions}
+            value={rangeQuery}
+            onChange={(e) => {
+              setRangeQuery(e.target.value);
+            }}
+          />
+          <Button
+            variant="secondary"
+            className="grow sm:shrink sm:grow-0 xl:ml-auto"
+            onClick={resetFilters}
+          >
+            Limpar filtros
+          </Button>
         </article>
-        <TransactionsList />
+        <TransactionsList
+          description={description}
+          range={rangeQuery}
+          type={typeQuery}
+          tag={tagQuery}
+        />
       </section>
     </>
   );

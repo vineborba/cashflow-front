@@ -78,10 +78,10 @@ export function TransactionIcon({
   tag,
   type,
 }: {
-  tag: string;
+  tag?: string;
   type: TransactionType;
 }) {
-  const normalizedTag = normalizeString(tag.toLowerCase());
+  const normalizedTag = normalizeString(tag?.toLowerCase() || "");
   const { Icon, color, bgColor } =
     COMMON_ICONS[normalizedTag as IconKey] ?? COMMON_ICONS[type];
 

@@ -17,3 +17,12 @@ type NewTransaction = {
   type: TransactionType;
   tags: string[];
 };
+
+type ListTransactionsParams = {
+  description?: string;
+  tag?: string;
+  type?: string;
+  range?: string;
+  page?: number;
+  limit?: number;
+};

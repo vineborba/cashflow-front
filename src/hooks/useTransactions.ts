@@ -2,17 +2,32 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { transactionsService } from "../services/transactions.service";
 
-export const useTransactions = () => {
+export const useTransactions = ({
+  description = "",
+  tag = "",
+  type = "",
+  range = "",
+  page = 1,
+  limit = 15,
+}: ListTransactionsParams = {}) => {
   const queryClient = useQueryClient();
 
   const {
-    data = [],
+    data,
     isLoading,
     error: loadError,
     refetch,
   } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: transactionsService.listTransactions,
+    queryKey: ["transactions", { description, tag, type, range, page, limit }],
+    queryFn: () =>
+      transactionsService.listTransactions({
+        description,
+        tag,
+        type,
+        range,
+        page,
+        limit,
+      }),
   });
 
   const { mutateAsync, error: createError } = useMutation({
@@ -27,7 +42,8 @@ export const useTransactions = () => {
   });
 
   return {
-    transactions: data,
+    transactions: data?.data || [],
+    pagination: data?.pagination || { total: 0, pages: 0 },
     isLoadingTransactions: isLoading,
     transactionsLoadError: loadError,
     refetchTransactions: refetch,
