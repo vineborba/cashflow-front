@@ -2,6 +2,7 @@ import { useTransactions } from "@app/hooks/useTransactions";
 import { formatMonetaryValue } from "@app/utils/formatMonetaryValue";
 
 import { TransactionIcon } from "./TransactionIcon";
+import { Link } from "react-router";
 
 type ListItemProps = Omit<Transaction, "id">;
 
@@ -25,26 +26,33 @@ function ListItem({ description, value, date, type, tags }: ListItemProps) {
 export function TransactionsSummary() {
   const { transactions } = useTransactions({ limit: 6, page: 1 });
 
-  if (!transactions.length) {
-    return null;
-  }
-
   return (
     <article className="flex flex-col gap-2 rounded-lg border border-slate-300 p-4">
       <h6 className="text-2xl font-bold">Transações recentes</h6>
       <p className="text-slate-600">Suas últimas atividades financeiras</p>
-      <ul className="gap-2">
-        {transactions.map((t) => (
-          <ListItem
-            key={t.id}
-            date={t.date}
-            description={t.description}
-            value={t.value}
-            type={t.type}
-            tags={t.tags}
-          />
-        ))}
-      </ul>
+      {transactions.length ? (
+        <ul className="gap-2">
+          {transactions.map((t) => (
+            <ListItem
+              key={t.id}
+              date={t.date}
+              description={t.description}
+              value={t.value}
+              type={t.type}
+              tags={t.tags}
+            />
+          ))}
+        </ul>
+      ) : (
+        <p className="text-center text-slate-400">
+          Parece que você ainda não adicionou nenhuma transação!
+          <br />
+          <Link to="/transactions" className="text-blue-300 underline">
+            Vá para a seção de transações para começar a adicionar suas
+            transações.
+          </Link>
+        </p>
+      )}
     </article>
   );
 }
