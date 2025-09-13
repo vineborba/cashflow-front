@@ -13,6 +13,8 @@ function AccountListItem({
   type,
   description,
 }: AccountListItemProps) {
+  const isNegativeBalance = balance < 0;
+
   return (
     <li className="grid grid-cols-6 gap-1 border border-b-0 border-gray-300 p-2 last:rounded-b-lg last:border-b md:py-3">
       <div className="col-span-2 flex flex-row items-center gap-2">
@@ -25,7 +27,9 @@ function AccountListItem({
       <p className="hidden text-center text-xs sm:block md:text-sm lg:text-base">
         {accountTypeLabel[type]}
       </p>
-      <p className="col-span-3 text-right text-xs sm:col-span-2 md:text-sm lg:text-base">
+      <p
+        className={`col-span-3 text-right text-xs sm:col-span-2 md:text-sm lg:text-base ${isNegativeBalance ? "text-red-500" : "text-black"}`}
+      >
         {formatMonetaryValue(balance)}
       </p>
     </li>
