@@ -1,8 +1,8 @@
-import { AccountsSummary } from "../components/AccountsSummary";
-import { Button } from "../components/Button";
-import { PageTitle } from "../components/PageTitle";
-import { ResumeCard } from "../components/ResumeCard";
-import { TransactionsSummary } from "../components/TransactionsSummary";
+import { AccountsSummary } from "@app/components/home/AccountsSummary";
+import { TransactionsSummary } from "@app/components/home/TransactionsSummary";
+import { Button } from "@app/components/Button";
+import { PageTitle } from "@app/components/PageTitle";
+import { ResumeCard } from "@app/components/ResumeCard";
 
 const cards = [
   {

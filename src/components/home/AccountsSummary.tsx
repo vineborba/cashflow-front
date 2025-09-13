@@ -1,7 +1,7 @@
 import { useAccounts } from "@app/hooks/useAccounts";
-import { accountTypeLabel } from "../utils/accountInfo";
-import { formatMonetaryValue } from "../utils/formatMonetaryValue";
-import { AccountIcon } from "./accounts/AccountIcon";
+import { accountTypeLabel } from "../../utils/accountInfo";
+import { formatMonetaryValue } from "../../utils/formatMonetaryValue";
+import { AccountIcon } from "../accounts/AccountIcon";
 
 type AccountSummaryItemProps = {} & Omit<
   Account,

@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
+
 import { useBudgets } from "@app/hooks/useBudgets";
 import { formatMonetaryValue } from "@app/utils/formatMonetaryValue";
 
 import { ExpenseMeter } from "./ExpenseMeter";
 import { BudgetsListHeader } from "./BudgetListHeader";
-import { useEffect, useState } from "react";
 
 type BudgetListItemProps = Budget & {
   isSmallScreen: boolean;

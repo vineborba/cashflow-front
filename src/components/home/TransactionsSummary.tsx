@@ -1,6 +1,6 @@
 import { useTransactions } from "@app/hooks/useTransactions";
-import { formatMonetaryValue } from "../utils/formatMonetaryValue";
-import { TransactionIcon } from "./transactions/TransactionIcon";
+import { formatMonetaryValue } from "../../utils/formatMonetaryValue";
+import { TransactionIcon } from "../transactions/TransactionIcon";
 
 type ListItemProps = Omit<Transaction, "id">;
 
@@ -20,7 +20,7 @@ function ListItem({ description, value, date, type, tags }: ListItemProps) {
 }
 
 export function TransactionsSummary() {
-  const { transactions } = useTransactions();
+  const { transactions } = useTransactions({ limit: 6, page: 1 });
 
   if (!transactions.length) {
     return null;
@@ -31,7 +31,7 @@ export function TransactionsSummary() {
       <h6 className="text-2xl font-bold">Transações recentes</h6>
       <p className="text-slate-600">Suas últimas atividades financeiras</p>
       <ul className="gap-2">
-        {transactions.slice(0, 6).map((t) => (
+        {transactions.map((t) => (
           <ListItem
             key={t.id}
             date={t.date}

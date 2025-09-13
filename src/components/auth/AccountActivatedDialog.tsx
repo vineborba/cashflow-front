@@ -5,7 +5,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { Button } from "./Button";
+import { Button } from "../Button";
 
 type AccountActivatedDialogProps = {
   isOpen: boolean;

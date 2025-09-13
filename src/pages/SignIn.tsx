@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@app/components/Button";
 import { Input } from "@app/components/Input";
-import { AccountActivatedDialog } from "@app/components/AccountActivatedDialog";
+import { AccountActivatedDialog } from "@app/components/auth/AccountActivatedDialog";
 
 import { useAuth } from "@app/contexts/Auth";
 import { useLoader } from "@app/contexts/Loader";
