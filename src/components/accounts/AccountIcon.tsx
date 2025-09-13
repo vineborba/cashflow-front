@@ -5,18 +5,18 @@ import {
 
 type AccountIconProps = {
   type: AccountType;
-  size?: number;
   className?: string;
 };
 
-export function AccountIcon({ type, size = 24, className }: AccountIconProps) {
+export function AccountIcon({ type, className }: AccountIconProps) {
   const Icon = accountTypeToIcon[type];
   const bgColor = accountTypeBackgroundColor[type];
 
   return (
-    <Icon
-      size={size}
-      className={`${bgColor} rounded-full p-1 text-white ${className ? ` ${className}` : ""}`}
-    />
+    <div className={`p-1 ${bgColor} rounded-full`}>
+      <Icon
+        className={`h-4 w-4 text-white md:h-6 md:w-6 ${className ? ` ${className}` : ""}`}
+      />
+    </div>
   );
 }

@@ -5,10 +5,7 @@ import { formatMonetaryValue } from "@app/utils/formatMonetaryValue";
 import { AccountIcon } from "./AccountIcon";
 import { AccountsListHeader } from "./AccountsListHeader";
 
-type AccountListItemProps = Omit<
-  Account,
-  "createdAt" | "updatedAt" | "bankCode"
->;
+type AccountListItemProps = Account;
 
 function AccountListItem({
   balance,

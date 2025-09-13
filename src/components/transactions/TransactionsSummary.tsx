@@ -1,6 +1,7 @@
 import { useTransactions } from "@app/hooks/useTransactions";
-import { formatMonetaryValue } from "../../utils/formatMonetaryValue";
-import { TransactionIcon } from "../transactions/TransactionIcon";
+import { formatMonetaryValue } from "@app/utils/formatMonetaryValue";
+
+import { TransactionIcon } from "./TransactionIcon";
 
 type ListItemProps = Omit<Transaction, "id">;
 
@@ -11,10 +12,12 @@ function ListItem({ description, value, date, type, tags }: ListItemProps) {
     <li className="flex flex-row items-center gap-2">
       <TransactionIcon tag={tags[0]} type={type} />
       <div className="flex grow flex-col">
-        <p className="text-base font-bold">{description}</p>
-        <p className="text-sm text-slate-600">{formatedDate}</p>
+        <p className="text-sm font-bold md:text-base">{description}</p>
+        <p className="text-xs text-slate-600 md:text-sm">{formatedDate}</p>
       </div>
-      <p className="text-lg font-bold">{formatMonetaryValue(value)}</p>
+      <p className="text-base font-bold md:text-lg">
+        {formatMonetaryValue(value)}
+      </p>
     </li>
   );
 }

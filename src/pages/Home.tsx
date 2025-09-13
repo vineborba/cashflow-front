@@ -1,5 +1,5 @@
-import { AccountsSummary } from "@app/components/home/AccountsSummary";
-import { TransactionsSummary } from "@app/components/home/TransactionsSummary";
+import { AccountsSummary } from "@app/components/accounts/AccountsSummary";
+import { TransactionsSummary } from "@app/components/transactions/TransactionsSummary";
 import { Button } from "@app/components/Button";
 import { PageTitle } from "@app/components/PageTitle";
 import { ResumeCard } from "@app/components/ResumeCard";

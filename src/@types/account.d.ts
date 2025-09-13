@@ -9,10 +9,7 @@ type NewAccount = {
 
 type Account = {
   id: string;
-  updatedAt: string;
-  createdAt: string;
   bank: string;
-  bankCode: string;
   description: string;
   type: AccountType;
   balance: number;
