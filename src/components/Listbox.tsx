@@ -30,16 +30,33 @@ export function Listbox({
   emptyStateMessage = "Selecione um valor",
   ...rest
 }: ListboxProps) {
+  function formatValue(value: Option | Option[]) {
+    if (!Array.isArray(value)) {
+      return value.label || emptyStateMessage;
+    }
+
+    if (value.length === 0) {
+      return emptyStateMessage;
+    }
+
+    if (value.length <= 2) {
+      return value.map((v) => v.label).join(", ");
+    }
+
+    return (
+      value
+        .slice(0, 2)
+        .map((v) => v.label)
+        .join(", ") + `, +${value.length - 2}`
+    );
+  }
+
   return (
     <Field>
       {label && <Label className="text-sm text-gray-700">{label}</Label>}
       <HListbox multiple={multiple} {...rest}>
         <ListboxButton className="block w-full rounded-md border border-gray-500 px-2 py-1 text-left">
-          {({ value }) =>
-            (Array.isArray(value)
-              ? value.map((v) => v.label).join(", ")
-              : value.label) || emptyStateMessage
-          }
+          {({ value }) => <>{formatValue(value)}</>}
         </ListboxButton>
         <ListboxOptions
           className="w-61 rounded-lg border border-gray-400 bg-white"
