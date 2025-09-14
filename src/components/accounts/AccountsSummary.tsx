@@ -31,7 +31,7 @@ export function AccountsSummary() {
 
   return (
     <article className="flex flex-col gap-2 rounded-lg border border-slate-300 p-4">
-      <h6 className="text-2xl font-bold">Resumo das contas</h6>
+      <h3 className="text-2xl font-bold">Resumo das contas</h3>
       <p className="text-slate-600">Visão geral das suas contas bancárias</p>
       {accounts.length ? (
         <ul className="space-y-2">

@@ -64,7 +64,10 @@ export function Header() {
           </NavLink>
         ))}
         <Popover className="relative ml-auto">
-          <PopoverButton className="cursor-pointer">
+          <PopoverButton
+            className="cursor-pointer"
+            aria-label="Menu do usuário"
+          >
             <User />
           </PopoverButton>
           <PopoverPanel

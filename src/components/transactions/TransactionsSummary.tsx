@@ -28,7 +28,7 @@ export function TransactionsSummary() {
 
   return (
     <article className="flex flex-col gap-2 rounded-lg border border-slate-300 p-4">
-      <h6 className="text-2xl font-bold">Transações recentes</h6>
+      <h2 className="text-2xl font-bold">Transações recentes</h2>
       <p className="text-slate-600">Suas últimas atividades financeiras</p>
       {transactions.length ? (
         <ul className="gap-2">

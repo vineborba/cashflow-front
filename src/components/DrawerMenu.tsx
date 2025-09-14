@@ -50,9 +50,9 @@ export function DrawerMenu() {
 
       {open && (
         <nav className="absolute top-0 right-0 bottom-0 left-0 z-40 flex flex-col gap-4 bg-white shadow-md transition-transform duration-300 ease-in-out">
-          <h3 className="mb-4 w-full border-b border-slate-300 p-4 text-3xl">
+          <h2 className="mb-4 w-full border-b border-slate-300 p-4 text-3xl">
             Olá, <strong>{user!.name}</strong>
-          </h3>
+          </h2>
           {routes.map(({ location, label, Icon }) => (
             <NavLink
               to={location}

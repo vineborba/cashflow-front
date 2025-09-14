@@ -72,6 +72,7 @@ export function Transactions() {
           <Select
             options={tagsOptions}
             value={tagQuery}
+            aria-label="Filtro de tag"
             onChange={(e) => {
               setTagQuery(e.target.value);
             }}
@@ -79,6 +80,7 @@ export function Transactions() {
           <Select
             options={typeOptions}
             value={typeQuery}
+            aria-label="Filtro de tipo"
             onChange={(e) => {
               setTypeQuery(e.target.value);
             }}
@@ -86,6 +88,7 @@ export function Transactions() {
           <Select
             options={rangeOptions}
             value={rangeQuery}
+            aria-label="Filtro de período"
             onChange={(e) => {
               setRangeQuery(e.target.value);
             }}

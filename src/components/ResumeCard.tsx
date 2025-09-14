@@ -11,7 +11,7 @@ export function ResumeCard({ title, value, className }: ResumeCardProps) {
     <article
       className={`rounded-lg border border-gray-300 p-4${className ? ` ${className}` : ""}`}
     >
-      <h6 className="text-sm">{title}</h6>
+      <h2 className="text-sm">{title}</h2>
       <p className="text-base font-bold lg:text-lg xl:text-2xl">
         {formatMonetaryValue(value)}
       </p>

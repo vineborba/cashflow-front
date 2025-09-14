@@ -35,7 +35,7 @@ function TransactionListItem({
         {formattedDate}
       </p>
       <p
-        className={`my-auto text-right text-xs lg:text-base ${isIncome ? "before:content['+'] text-green-500" : ""}`}
+        className={`my-auto text-right text-xs lg:text-base ${isIncome ? "before:content['+'] text-green-600" : ""}`}
       >
         {isIncome ? "+" + formatedValue : formatedValue}
       </p>
