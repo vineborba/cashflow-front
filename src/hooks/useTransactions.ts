@@ -33,11 +33,14 @@ export const useTransactions = ({
   const { mutateAsync, error: createError } = useMutation({
     mutationFn: transactionsService.createTransaction,
     onSuccess: (data) => {
-      queryClient.setQueryData<Transaction[]>(["transactions"], (state) => {
-        if (!state) return [data];
+      queryClient.setQueryData<Transaction[]>(
+        ["transactions", { description, tag, type, range, page, limit }],
+        (state) => {
+          if (!state) return [data];
 
-        return [data, ...state];
-      });
+          return [data, ...state];
+        },
+      );
     },
   });
 
