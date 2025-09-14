@@ -40,7 +40,7 @@ export function Header() {
   if (!isAuthenticated) return null;
 
   return (
-    <header className="flex w-full shrink-0 justify-between border border-gray-300 p-2">
+    <header className="hidden w-full shrink-0 justify-between border border-gray-300 sm:flex sm:p-2">
       <nav className="mg:gap-4 mx-auto flex w-full max-w-[1280px] gap-3 lg:gap-6">
         {routes.map(({ location, label, Icon }) => (
           <NavLink
@@ -72,7 +72,7 @@ export function Header() {
             className="mt-1 flex flex-col rounded-md bg-white shadow-sm"
           >
             <p className="p-2">
-              Olá, <span className="font-bold">{user?.name}!</span>
+              Olá, <strong>{user!.name}!</strong>
             </p>
             <hr className="border-gray-300" />
             <button

@@ -11,12 +11,14 @@ import { Accounts } from "./pages/Accounts";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { useLoader } from "./contexts/Loader";
+import { DrawerMenu } from "./components/DrawerMenu";
 
 function RootLayout() {
   return (
     <>
       <Header />
-      <section className="mx-auto flex w-full max-w-[1280px] grow flex-col px-2 py-8 md:px-6">
+      <DrawerMenu />
+      <section className="mx-auto flex w-full max-w-[1280px] grow flex-col px-2 py-2 sm:py-4 md:px-6 md:py-8">
         <Outlet />
       </section>
     </>
