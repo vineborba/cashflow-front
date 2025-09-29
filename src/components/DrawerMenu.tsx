@@ -3,6 +3,7 @@ import { NavLink } from "react-router";
 import { X, Menu, CreditCard, DollarSign, Home, PieChart } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useAuth } from "@app/contexts/Auth";
+import posthog from "posthog-js";
 
 type Route = {
   label: string;
@@ -57,7 +58,10 @@ export function DrawerMenu() {
             <NavLink
               to={location}
               key={location}
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                posthog.capture("Navigation", { location, label });
+                setOpen(false);
+              }}
               className="flex flex-row items-center gap-4 px-4"
             >
               {({ isActive }) => (
