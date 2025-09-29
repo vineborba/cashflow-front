@@ -93,7 +93,9 @@ export function Listbox({
         <ChevronDown className="relative bottom-6 z-50 mr-2 ml-auto h-4 w-4" />
       </HListbox>
       {!!error && (
-        <Description className="text-xs text-red-500">{error}</Description>
+        <Description className="-mt-3 text-xs text-red-500">
+          {error}
+        </Description>
       )}
     </Field>
   );
