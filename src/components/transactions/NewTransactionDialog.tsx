@@ -5,12 +5,15 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import * as v from "valibot";
 
 import { useTags } from "@app/hooks/useTags";
 import { useAccounts } from "@app/hooks/useAccounts";
 import { useTransactions } from "@app/hooks/useTransactions";
-import { transformFormDataToJson } from "@app/utils/transformFormDataToJson";
+import { getErrorMessage, setFormError } from "@app/utils/errorHandling";
+import { useLoader } from "@app/contexts/Loader";
 
 import { Select } from "../Select";
 import { Button } from "../Button";
@@ -24,18 +27,43 @@ const TRANSACTION_TYPE_OPTIONS: { value: TransactionType; label: string }[] = [
   { value: "income", label: "Receita" },
 ];
 
+const newTransactionSchema = v.object({
+  description: v.pipe(
+    v.string("Descrição é obrigatória"),
+    v.nonEmpty("Descrição é obrigatória"),
+    v.minLength(5, "Descrição deve ter pelo menos 5 caracteres"),
+    v.maxLength(120, "Descrição deve ter no máximo 120 caracteres"),
+  ),
+  type: v.pipe(
+    v.string("Tipo de transação é obrigatório"),
+    v.nonEmpty("Selecione um tipo de transação"),
+  ),
+  account: v.pipe(
+    v.string("Conta é obrigatória"),
+    v.nonEmpty("Selecione uma conta"),
+  ),
+  amount: v.pipe(
+    v.string("Valor é obrigatório"),
+    v.nonEmpty("Valor é obrigatório"),
+  ),
+  date: v.date("Data é obrigatória"),
+  tags: v.pipe(
+    v.array(
+      v.object({
+        id: v.string(),
+        label: v.string(),
+      }),
+    ),
+    v.minLength(1, "Selecione pelo menos uma categoria"),
+  ),
+});
+
 type NewTransactionDialogProps = {
   isOpen: boolean;
   close: () => void;
 };
 
-type NewTransactionForm = {
-  description: string;
-  type: TransactionType;
-  account: string;
-  amount: string;
-  tags: { id: string; label: string }[];
-};
+type NewTransactionForm = v.InferOutput<typeof newTransactionSchema>;
 
 export function NewTransactionDialog({
   isOpen,
@@ -44,8 +72,7 @@ export function NewTransactionDialog({
   const { createTransaction } = useTransactions();
   const { accounts } = useAccounts();
   const { tags } = useTags();
-
-  const [date, setDate] = useState(new Date());
+  const { addLoader, removeLoader } = useLoader();
 
   const tagsOptions = tags.map((t) => ({ id: t.id, label: t.name }));
   const accountsOptions = accounts.map((a) => ({
@@ -53,35 +80,65 @@ export function NewTransactionDialog({
     label: a.description,
   }));
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    reset,
+    control,
+    formState: { errors, isValid },
+  } = useForm<NewTransactionForm>({
+    resolver: valibotResolver(newTransactionSchema),
+    mode: "onChange",
+    defaultValues: {
+      description: "",
+      type: TRANSACTION_TYPE_OPTIONS[0].value,
+      account: "",
+      amount: "0",
+      date: new Date(),
+      tags: [],
+    },
+  });
 
-    const formData = new FormData(e.currentTarget);
-    const data = transformFormDataToJson<NewTransactionForm>(formData);
-    const {
-      amount,
-      description,
-      account: accountId,
-      tags: formTags,
-      type,
-    } = data;
-    const mappedTags = formTags.map((t) => t.id);
-    const formattedAmount = amount
-      .replace("R$ ", "")
-      .replaceAll(".", "")
-      .replace(",", ".");
+  async function onSubmit(data: NewTransactionForm) {
+    addLoader("create-transaction");
+    try {
+      const {
+        amount,
+        description,
+        account: accountId,
+        tags: formTags,
+        type,
+        date,
+      } = data;
+      const mappedTags = formTags.map((t) => t.id);
+      const formattedAmount = amount
+        .replace("R$ ", "")
+        .replaceAll(".", "")
+        .replace(",", ".");
 
-    await createTransaction({
-      description,
-      type,
-      date,
-      accountId,
-      tags: mappedTags,
-      value: +formattedAmount,
-    });
+      await createTransaction({
+        description,
+        type: type as TransactionType,
+        date,
+        accountId,
+        tags: mappedTags,
+        value: +formattedAmount,
+      });
 
-    setDate(new Date());
-    close();
+      reset();
+      close();
+    } catch (error) {
+      console.error("Failed to create transaction", error);
+      const errorMessage = getErrorMessage(error, "Erro ao criar transação");
+      setFormError(
+        setError,
+        ["description", "type", "account", "amount", "date", "tags"],
+        errorMessage,
+      );
+    }
+    removeLoader("create-transaction");
   }
 
   return (
@@ -92,45 +149,143 @@ export function NewTransactionDialog({
           <DialogTitle className="font-bold">Registrar transação</DialogTitle>
           <Description>Insira os dados da sua tranasção</Description>
 
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input
-              name="description"
               label="Descrição"
               placeholder="Como identificar esta transação"
+              error={errors.description?.message}
+              {...register("description", {
+                onChange: () => {
+                  if (errors.description?.type === "manual") {
+                    clearErrors([
+                      "description",
+                      "type",
+                      "account",
+                      "amount",
+                      "date",
+                      "tags",
+                    ]);
+                  }
+                },
+              })}
             />
             <Select
               options={TRANSACTION_TYPE_OPTIONS}
               label="Tipo de transação"
-              name="type"
-              defaultValue={TRANSACTION_TYPE_OPTIONS[0].value}
+              error={errors.type?.message}
+              {...register("type", {
+                onChange: () => {
+                  if (errors.type?.type === "manual") {
+                    clearErrors([
+                      "description",
+                      "type",
+                      "account",
+                      "amount",
+                      "date",
+                      "tags",
+                    ]);
+                  }
+                },
+              })}
             />
-            <Select options={accountsOptions} label="Conta" name="account" />
+            <Select
+              options={accountsOptions}
+              label="Conta"
+              error={errors.account?.message}
+              {...register("account", {
+                onChange: () => {
+                  if (errors.account?.type === "manual") {
+                    clearErrors([
+                      "description",
+                      "type",
+                      "account",
+                      "amount",
+                      "date",
+                      "tags",
+                    ]);
+                  }
+                },
+              })}
+            />
             <CurrencyMaskedInput
               label="Valor"
-              name="amount"
               prefix="R$ "
-              defaultValue={0}
               decimalSeparator=","
               groupSeparator="."
+              error={errors.amount?.message}
+              {...register("amount", {
+                onChange: () => {
+                  if (errors.amount?.type === "manual") {
+                    clearErrors([
+                      "description",
+                      "type",
+                      "account",
+                      "amount",
+                      "date",
+                      "tags",
+                    ]);
+                  }
+                },
+              })}
             />
-            <DatePicker
-              selected={date}
-              onChange={(newDate) => setDate(newDate ?? new Date())}
-              label="Data"
+            <Controller
+              name="date"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  selected={field.value}
+                  onChange={(newDate) => {
+                    field.onChange(newDate ?? new Date());
+                    if (errors.date?.type === "manual") {
+                      clearErrors([
+                        "description",
+                        "type",
+                        "account",
+                        "amount",
+                        "date",
+                        "tags",
+                      ]);
+                    }
+                  }}
+                  label="Data"
+                />
+              )}
             />
 
-            <Listbox
-              options={tagsOptions}
-              label="Categorias"
+            <Controller
               name="tags"
-              multiple
-              emptyStateMessage="Selecione uma categoria"
+              control={control}
+              render={({ field }) => (
+                <Listbox
+                  options={tagsOptions}
+                  label="Categorias"
+                  multiple
+                  emptyStateMessage="Selecione uma categoria"
+                  error={errors.tags?.message}
+                  value={field.value}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    if (errors.tags?.type === "manual") {
+                      clearErrors([
+                        "description",
+                        "type",
+                        "account",
+                        "amount",
+                        "date",
+                        "tags",
+                      ]);
+                    }
+                  }}
+                />
+              )}
             />
             <div className="flex justify-between gap-4">
               <Button onClick={close} variant="secondary">
                 Cancelar
               </Button>
-              <Button type="submit">Confirmar</Button>
+              <Button type="submit" disabled={!isValid}>
+                Confirmar
+              </Button>
             </div>
           </form>
         </DialogPanel>

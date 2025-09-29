@@ -5,10 +5,14 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
+import { useForm } from "react-hook-form";
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import * as v from "valibot";
 
 import { useAccounts } from "@app/hooks/useAccounts";
 import { useBanks } from "@app/hooks/useBanks";
-import { transformFormDataToJson } from "@app/utils/transformFormDataToJson";
+import { getErrorMessage, setFormError } from "@app/utils/errorHandling";
+import { useLoader } from "@app/contexts/Loader";
 
 import { Select } from "../Select";
 import { Button } from "../Button";
@@ -21,37 +25,84 @@ const ACCOUNT_TYPES_OPTIONS: { value: AccountType; label: string }[] = [
   { value: "checking", label: "Conta corrente" },
 ];
 
+const newAccountSchema = v.object({
+  description: v.pipe(
+    v.string("Descrição é obrigatória"),
+    v.nonEmpty("Descrição é obrigatória"),
+    v.minLength(3, "Descrição deve ter pelo menos 3 caracteres"),
+    v.maxLength(250, "Descrição deve ter no máximo 250 caracteres"),
+  ),
+  bank: v.pipe(
+    v.string("Banco é obrigatório"),
+    v.nonEmpty("Selecione um banco"),
+  ),
+  type: v.pipe(
+    v.string("Tipo de conta é obrigatório"),
+    v.nonEmpty("Selecione um tipo de conta"),
+  ),
+  balance: v.pipe(
+    v.string("Saldo é obrigatório"),
+    v.nonEmpty("Saldo é obrigatório"),
+  ),
+});
+
 type NewAccountDialogProps = {
   isOpen: boolean;
   close: () => void;
 };
 
-type NewAccountForm = {
-  description: string;
-  type: AccountType;
-  balance: string;
-  bank: string;
-};
+type NewAccountForm = v.InferOutput<typeof newAccountSchema>;
 
 export function NewAccountDialog({ isOpen, close }: NewAccountDialogProps) {
   const { createAccount } = useAccounts();
   const { banks } = useBanks();
+  const { addLoader, removeLoader } = useLoader();
 
   const banksOptions = banks.map((b) => ({ value: b.code, label: b.name }));
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    reset,
+    formState: { errors, isValid },
+  } = useForm<NewAccountForm>({
+    resolver: valibotResolver(newAccountSchema),
+    mode: "onChange",
+    defaultValues: {
+      type: ACCOUNT_TYPES_OPTIONS[0].value,
+      balance: "0",
+    },
+  });
 
-    const formData = new FormData(e.currentTarget);
-    const data = transformFormDataToJson<NewAccountForm>(formData);
-    const { balance, bank: bankCode } = data;
-    const formattedBalance = balance
-      .replace("R$ ", "")
-      .replaceAll(".", "")
-      .replace(",", ".");
+  async function onSubmit(data: NewAccountForm) {
+    addLoader("create-account");
+    try {
+      const { balance, bank: bankCode } = data;
+      const formattedBalance = balance
+        .replace("R$ ", "")
+        .replaceAll(".", "")
+        .replace(",", ".");
 
-    await createAccount({ ...data, bankCode, balance: +formattedBalance });
-    close();
+      await createAccount({
+        description: data.description,
+        type: data.type as AccountType,
+        bankCode,
+        balance: +formattedBalance,
+      });
+      reset();
+      close();
+    } catch (error) {
+      console.error("Failed to create account", error);
+      const errorMessage = getErrorMessage(error, "Erro ao criar conta");
+      setFormError(
+        setError,
+        ["description", "bank", "type", "balance"],
+        errorMessage,
+      );
+    }
+    removeLoader("create-account");
   }
 
   return (
@@ -62,32 +113,64 @@ export function NewAccountDialog({ isOpen, close }: NewAccountDialogProps) {
           <DialogTitle className="font-bold">Criar nova conta</DialogTitle>
           <Description>Insira os dados da sua conta bancária</Description>
 
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input
-              name="description"
               label="Descrição"
               placeholder="Como identificar esta conta"
+              error={errors.description?.message}
+              {...register("description", {
+                onChange: () => {
+                  if (errors.description?.type === "manual") {
+                    clearErrors(["description", "bank", "type", "balance"]);
+                  }
+                },
+              })}
             />
-            <Select options={banksOptions} label="Banco" name="bank" />
+            <Select
+              options={banksOptions}
+              label="Banco"
+              error={errors.bank?.message}
+              {...register("bank", {
+                onChange: () => {
+                  if (errors.bank?.type === "manual") {
+                    clearErrors(["description", "bank", "type", "balance"]);
+                  }
+                },
+              })}
+            />
             <Select
               options={ACCOUNT_TYPES_OPTIONS}
               label="Tipo de conta"
-              name="type"
-              defaultValue={ACCOUNT_TYPES_OPTIONS[0].value}
+              error={errors.type?.message}
+              {...register("type", {
+                onChange: () => {
+                  if (errors.type?.type === "manual") {
+                    clearErrors(["description", "bank", "type", "balance"]);
+                  }
+                },
+              })}
             />
             <CurrencyMaskedInput
               label="Saldo"
-              name="balance"
               prefix="R$ "
-              defaultValue={0}
               decimalSeparator=","
               groupSeparator="."
+              error={errors.balance?.message}
+              {...register("balance", {
+                onChange: () => {
+                  if (errors.balance?.type === "manual") {
+                    clearErrors(["description", "bank", "type", "balance"]);
+                  }
+                },
+              })}
             />
             <div className="flex justify-between gap-4">
               <Button onClick={close} variant="secondary">
                 Cancelar
               </Button>
-              <Button type="submit">Confirmar</Button>
+              <Button type="submit" disabled={!isValid}>
+                Confirmar
+              </Button>
             </div>
           </form>
         </DialogPanel>

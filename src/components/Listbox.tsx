@@ -20,7 +20,11 @@ type ListboxProps = {
   label?: string;
   error?: string;
   emptyStateMessage?: string;
-} & HListboxProps;
+  value?: Option | Option[];
+  onChange?: (value: Option | Option[]) => void;
+  defaultValue?: Option | Option[];
+  multiple?: boolean;
+} & Omit<HListboxProps, "value" | "onChange" | "defaultValue" | "multiple">;
 
 export function Listbox({
   label,
@@ -28,6 +32,9 @@ export function Listbox({
   options,
   multiple,
   emptyStateMessage = "Selecione um valor",
+  value,
+  onChange,
+  defaultValue,
   ...rest
 }: ListboxProps) {
   function formatValue(value: Option | Option[]) {
@@ -54,7 +61,13 @@ export function Listbox({
   return (
     <Field>
       {label && <Label className="text-sm text-gray-700">{label}</Label>}
-      <HListbox multiple={multiple} {...rest}>
+      <HListbox
+        multiple={multiple}
+        value={value}
+        onChange={onChange}
+        defaultValue={defaultValue}
+        {...rest}
+      >
         <ListboxButton className="block w-full rounded-md border border-gray-500 px-2 py-1 text-left">
           {({ value }) => <>{formatValue(value)}</>}
         </ListboxButton>
