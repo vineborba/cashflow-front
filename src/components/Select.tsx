@@ -5,6 +5,7 @@ import {
   Description,
 } from "@headlessui/react";
 import type { SelectProps as HSelectProps } from "@headlessui/react";
+import { ChevronDown } from "lucide-react";
 
 type Option = {
   value: string;
@@ -30,6 +31,7 @@ export function Select({ label, error, options, ...rest }: SelectProps) {
             {opt.label}
           </option>
         ))}
+        <ChevronDown className="relative bottom-6 z-50 mr-2 ml-auto h-4 w-4" />
       </HSelect>
       {!!error && (
         <Description className="text-xs text-red-500">{error}</Description>

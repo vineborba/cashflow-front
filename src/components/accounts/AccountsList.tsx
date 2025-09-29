@@ -17,18 +17,18 @@ function AccountListItem({
 
   return (
     <li className="grid grid-cols-6 gap-1 border border-b-0 border-gray-300 p-2 last:rounded-b-lg last:border-b md:py-3">
-      <div className="col-span-2 flex flex-row items-center gap-2">
+      <div className="col-span-2 my-auto flex flex-row items-center gap-2">
         <AccountIcon type={type} />
         <p className="text-xs md:text-sm lg:text-base">{description}</p>
       </div>
-      <p className="text-center text-xs break-normal md:text-sm lg:text-base">
+      <p className="my-auto text-center text-xs break-normal md:text-sm lg:text-base">
         {bank}
       </p>
-      <p className="hidden text-center text-xs sm:block md:text-sm lg:text-base">
+      <p className="my-auto hidden text-center text-xs sm:block md:text-sm lg:text-base">
         {accountTypeLabel[type]}
       </p>
       <p
-        className={`col-span-3 text-right text-xs sm:col-span-2 md:text-sm lg:text-base ${isNegativeBalance ? "text-red-500" : "text-black"}`}
+        className={`col-span-3 my-auto text-right text-xs sm:col-span-2 md:text-sm lg:text-base ${isNegativeBalance ? "text-red-500" : "text-black"}`}
       >
         {formatMonetaryValue(balance)}
       </p>

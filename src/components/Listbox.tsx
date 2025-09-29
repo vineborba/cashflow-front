@@ -8,7 +8,7 @@ import {
   Description,
 } from "@headlessui/react";
 import type { ListboxProps as HListboxProps } from "@headlessui/react";
-import { Check } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 
 type Option = {
   id: string;
@@ -77,6 +77,7 @@ export function Listbox({
             </ListboxOption>
           ))}
         </ListboxOptions>
+        <ChevronDown className="relative bottom-6 z-50 mr-2 ml-auto h-4 w-4" />
       </HListbox>
       {!!error && (
         <Description className="text-xs text-red-500">{error}</Description>
