@@ -1,36 +1,80 @@
 import { Link } from "react-router";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import * as v from "valibot";
 
 import { Button } from "@app/components/Button";
 import { Input } from "@app/components/Input";
 
-import { transformFormDataToJson } from "@app/utils/transformFormDataToJson";
 import { authService } from "@app/services/auth.service";
+import { getErrorMessage, setFormError } from "@app/utils/errorHandling";
+import { useLoader } from "@app/contexts/Loader";
 
-type SignUpForm = {
-  name: string;
-  email: string;
-  password: string;
-};
+const signUpSchema = v.pipe(
+  v.object({
+    name: v.pipe(
+      v.string("Nome é obrigatório"),
+      v.nonEmpty("Nome é obrigatório"),
+      v.minLength(6, "Nome deve ter pelo menos 6 caracteres"),
+      v.maxLength(120, "Nome deve ter no máximo 120 caracteres"),
+    ),
+    email: v.pipe(
+      v.string("E-mail é obrigatório"),
+      v.nonEmpty("E-mail é obrigatório"),
+      v.email("Digite um e-mail válido"),
+      v.minLength(6, "E-mail deve ter pelo menos 6 caracteres"),
+      v.maxLength(40, "E-mail deve ter no máximo 40 caracteres"),
+    ),
+    password: v.pipe(
+      v.string("Senha é obrigatória"),
+      v.nonEmpty("Senha é obrigatória"),
+      v.minLength(6, "Senha deve ter pelo menos 6 caracteres"),
+      v.maxLength(255, "Senha deve ter no máximo 255 caracteres"),
+    ),
+    confirmPassword: v.pipe(
+      v.string("Confirmação de senha é obrigatória"),
+      v.nonEmpty("Confirmação de senha é obrigatória"),
+    ),
+  }),
+  v.forward(
+    v.check(
+      (input) => input.password === input.confirmPassword,
+      "As senhas devem ser iguais",
+    ),
+    ["confirmPassword"],
+  ),
+);
+
+type SignUpForm = v.InferOutput<typeof signUpSchema>;
 
 export function SignUp() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const { addLoader, removeLoader } = useLoader();
 
-  const disableButton =
-    !email ||
-    !name ||
-    !password ||
-    !confirmPassword ||
-    password !== confirmPassword;
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors, isValid },
+  } = useForm<SignUpForm>({
+    resolver: valibotResolver(signUpSchema),
+    mode: "onChange",
+  });
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = transformFormDataToJson<SignUpForm>(formData);
-    await authService.signUp(data.name, data.email, data.password);
+  async function onSubmit(data: SignUpForm) {
+    addLoader("sign-up");
+    try {
+      await authService.signUp(data.name, data.email, data.password);
+    } catch (error) {
+      console.error("Failed to sign up", error);
+      const errorMessage = getErrorMessage(error, "Erro ao criar conta");
+      setFormError(
+        setError,
+        ["name", "email", "password", "confirmPassword"],
+        errorMessage,
+      );
+    }
+    removeLoader("sign-up");
   }
 
   return (
@@ -40,34 +84,59 @@ export function SignUp() {
         <h2 className="mb-4 text-center text-sm">
           Crie sua conta e comece a controlar suas finanças!
         </h2>
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Input
-            name="name"
             label="Nome"
             placeholder="Seu nome"
-            onChange={(e) => setName(e.target.value)}
+            error={errors.name?.message}
+            {...register("name", {
+              onChange: () => {
+                if (errors.name?.type === "manual") {
+                  clearErrors(["name", "email", "password", "confirmPassword"]);
+                }
+              },
+            })}
           />
           <Input
-            name="email"
             label="E-mail"
             placeholder="Seu e-mail"
-            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            error={errors.email?.message}
+            {...register("email", {
+              onChange: () => {
+                if (errors.email?.type === "manual") {
+                  clearErrors(["name", "email", "password", "confirmPassword"]);
+                }
+              },
+            })}
           />
           <Input
-            name="password"
             label="Senha"
             placeholder="Sua senha"
-            onChange={(e) => setPassword(e.target.value)}
             type="password"
+            error={errors.password?.message}
+            {...register("password", {
+              onChange: () => {
+                if (errors.password?.type === "manual") {
+                  clearErrors(["name", "email", "password", "confirmPassword"]);
+                }
+              },
+            })}
           />
           <Input
-            name="confirm-password"
             label="Confirmar senha"
             placeholder="Confirme sua senha"
-            onChange={(e) => setConfirmPassword(e.target.value)}
             type="password"
+            error={errors.confirmPassword?.message}
+            {...register("confirmPassword", {
+              onChange: () => {
+                if (errors.confirmPassword?.type === "manual") {
+                  clearErrors(["name", "email", "password", "confirmPassword"]);
+                }
+              },
+            })}
           />
-          <Button type="submit" size="full" disabled={disableButton}>
+          <Button type="submit" size="full" disabled={!isValid}>
             Confirmar
           </Button>
           <span className="block text-center">

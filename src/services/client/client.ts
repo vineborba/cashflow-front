@@ -1,5 +1,7 @@
-import ky from "ky";
+import ky, { HTTPError } from "ky";
 import { CookieJar } from "tough-cookie";
+
+import { ApiError, extractErrorMessage } from "./error";
 
 const cookieJar = new CookieJar();
 
@@ -27,6 +29,15 @@ export const apiClient = ky.create({
             await cookieJar.setCookie(cookie, url);
           }
         }
+      },
+    ],
+    beforeError: [
+      async (error) => {
+        if (error instanceof HTTPError) {
+          const errorMessage = await extractErrorMessage(error);
+          return new ApiError(errorMessage, error);
+        }
+        return error;
       },
     ],
   },

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import {
   Input as HInput,
   Label,
@@ -15,14 +15,17 @@ type InputProps = {
   containerClassName?: string;
 } & HInputProps;
 
-export function Input({
-  label,
-  error,
-  className = "",
-  containerClassName = "",
-  type = "text",
-  ...rest
-}: InputProps) {
+export const Input = forwardRef<HTMLInputElement, InputProps>(function (
+  {
+    label,
+    error,
+    className = "",
+    containerClassName = "",
+    type = "text",
+    ...rest
+  },
+  ref,
+) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -30,6 +33,7 @@ export function Input({
       {label && <Label className="text-sm text-gray-700">{label}</Label>}
       <HInput
         {...rest}
+        ref={ref}
         type={showPassword ? "text" : type}
         className={`block w-full rounded-md border border-gray-500 px-2 py-1 ${type === "password" ? "pr-8" : ""} ${className}`}
       />
@@ -51,4 +55,4 @@ export function Input({
       )}
     </Field>
   );
-}
+});
