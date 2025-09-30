@@ -2,7 +2,7 @@ import { AccountsSummary } from "@app/components/accounts/AccountsSummary";
 import { TransactionsSummary } from "@app/components/transactions/TransactionsSummary";
 import { PageTitle } from "@app/components/PageTitle";
 
-export function Home() {
+export default function Home() {
   return (
     <>
       <div className="mb-6 flex w-full flex-row justify-between">

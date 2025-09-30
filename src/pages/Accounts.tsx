@@ -6,7 +6,7 @@ import { PageTitle } from "@app/components/PageTitle";
 import { NewAccountDialog } from "@app/components/accounts/NewAccountDialog";
 import { AccountsResume } from "@app/components/accounts/AccountsResume";
 
-export function Accounts() {
+export default function Accounts() {
   const [openDialog, setOpenDialog] = useState(false);
 
   return (

@@ -50,7 +50,7 @@ type SignUpForm = v.InferOutput<typeof signUpSchema>;
 
 const LOADER_ID = "sign-up";
 
-export function SignUp() {
+export default function SignUp() {
   const { addLoader, removeLoader, isLoading } = useLoader();
   const navigate = useNavigate();
   const posthog = usePostHog();

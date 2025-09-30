@@ -31,7 +31,7 @@ const signInSchema = v.object({
 
 type SignInForm = v.InferOutput<typeof signInSchema>;
 
-export function SignIn() {
+export default function SignIn() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 

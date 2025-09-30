@@ -3,7 +3,7 @@ import { CheckCircle, Mail } from "lucide-react";
 
 import { Button } from "@app/components/Button";
 
-export function PostSignUp() {
+export default function PostSignUp() {
   return (
     <article className="mx-auto max-w-xs self-center border border-gray-100 p-6 shadow-sm md:mt-20 md:max-w-md">
       <div className="mb-6 text-center">

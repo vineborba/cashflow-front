@@ -1,17 +1,19 @@
 import { Routes, Route, Outlet, useLocation, Navigate } from "react-router";
+import { lazy, Suspense } from "react";
 
 import { useAuth } from "./contexts/Auth";
 
 import { Header } from "./components/Header";
 import { DrawerMenu } from "./components/DrawerMenu";
+import { GlobalLoader } from "./components/GlobalLoader";
 
-import { Home } from "./pages/Home";
-import { Transactions } from "./pages/Transactions";
-import { Budgets } from "./pages/Budgets";
-import { Accounts } from "./pages/Accounts";
-import { SignIn } from "./pages/SignIn";
-import { SignUp } from "./pages/SignUp";
-import { PostSignUp } from "./pages/PostSignUp";
+const Home = lazy(() => import("./pages/Home"));
+const Transactions = lazy(() => import("./pages/Transactions"));
+const Budgets = lazy(() => import("./pages/Budgets"));
+const Accounts = lazy(() => import("./pages/Accounts"));
+const SignIn = lazy(() => import("./pages/SignIn"));
+const SignUp = lazy(() => import("./pages/SignUp"));
+const PostSignUp = lazy(() => import("./pages/PostSignUp"));
 
 function RootLayout() {
   return (
@@ -48,20 +50,22 @@ function ProtectedLayout() {
 
 export function AppRouter() {
   return (
-    <Routes>
-      <Route path="/" element={<RootLayout />}>
-        <Route element={<AuthLayout />}>
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/sign-up-successful" element={<PostSignUp />} />
+    <Suspense fallback={<GlobalLoader />}>
+      <Routes>
+        <Route path="/" element={<RootLayout />}>
+          <Route element={<AuthLayout />}>
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/sign-up-successful" element={<PostSignUp />} />
+          </Route>
+          <Route element={<ProtectedLayout />}>
+            <Route index element={<Home />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/budgets" element={<Budgets />} />
+            <Route path="accounts" element={<Accounts />} />
+          </Route>
         </Route>
-        <Route element={<ProtectedLayout />}>
-          <Route index element={<Home />} />
-          <Route path="/transactions" element={<Transactions />} />
-          <Route path="/budgets" element={<Budgets />} />
-          <Route path="accounts" element={<Accounts />} />
-        </Route>
-      </Route>
-    </Routes>
+      </Routes>
+    </Suspense>
   );
 }

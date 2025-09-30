@@ -6,7 +6,7 @@ import { BudgetsList } from "@app/components/budgets/BudgetsList";
 import { BudgetsResume } from "@app/components/budgets/BudgetsResume";
 import { NewBudgetDialog } from "@app/components/budgets/NewBudgetDialog";
 
-export function Budgets() {
+export default function Budgets() {
   const [openDialog, setOpenDialog] = useState(false);
 
   return (

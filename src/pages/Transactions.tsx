@@ -8,7 +8,7 @@ import { Select } from "@app/components/Select";
 import { TransactionsList } from "@app/components/transactions/TransactionsList";
 import { NewTransactionDialog } from "@app/components/transactions/NewTransactionDialog";
 
-export function Transactions() {
+export default function Transactions() {
   const [openDialog, setOpenDialog] = useState(false);
   const [description, setDescription] = useState("");
   const [rangeQuery, setRangeQuery] = useState("");
