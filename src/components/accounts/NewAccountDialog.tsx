@@ -8,6 +8,7 @@ import {
 import { useForm } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import * as v from "valibot";
+import { usePostHog } from "posthog-js/react";
 
 import { useAccounts } from "@app/hooks/useAccounts";
 import { useBanks } from "@app/hooks/useBanks";
@@ -57,6 +58,7 @@ export function NewAccountDialog({ isOpen, close }: NewAccountDialogProps) {
   const { createAccount } = useAccounts();
   const { banks } = useBanks();
   const { addLoader, removeLoader } = useLoader();
+  const posthog = usePostHog();
 
   const banksOptions = banks.map((b) => ({ value: b.code, label: b.name }));
 
@@ -95,6 +97,9 @@ export function NewAccountDialog({ isOpen, close }: NewAccountDialogProps) {
       close();
     } catch (error) {
       console.error("Failed to create account", error);
+      posthog.captureException(error, {
+        scope: "Failed to create new account",
+      });
       const errorMessage = getErrorMessage(error, "Erro ao criar conta");
       setFormError(
         setError,

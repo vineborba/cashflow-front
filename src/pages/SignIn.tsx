@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import * as v from "valibot";
+import { usePostHog } from "posthog-js/react";
 
 import { getErrorMessage, setFormError } from "@app/utils/errorHandling";
 
@@ -36,6 +37,7 @@ export function SignIn() {
 
   const { signIn } = useAuth();
   const { addLoader, removeLoader } = useLoader();
+  const posthog = usePostHog();
 
   const {
     register,
@@ -55,6 +57,7 @@ export function SignIn() {
       setIsOpen(true);
     } catch (error) {
       console.error("Failed to ativate account", error);
+      posthog.captureException(error, { scope: "Failed to activate account" });
     }
     removeLoader("account-ativate");
   }
@@ -76,6 +79,7 @@ export function SignIn() {
       await signIn(data.email, data.password);
     } catch (error) {
       console.error("Failed to sign in", error);
+      posthog.captureException(error, { scope: "Failed to sign in" });
       const errorMessage = getErrorMessage(error, "E-mail ou senha incorretos");
       setFormError(setError, ["email", "password"], errorMessage);
     }

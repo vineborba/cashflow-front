@@ -5,6 +5,7 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
+import { usePostHog } from "posthog-js/react";
 
 import { authService } from "@app/services/auth.service";
 import { userService } from "@app/services/user.service";
@@ -27,6 +28,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [initialLoad, setInitialLoad] = useState(true);
 
   const { addLoader, removeLoader } = useLoader();
+  const posthog = usePostHog();
 
   useEffect(() => {
     if (initialLoad) {
@@ -41,6 +43,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const userData = await userService.loadUserData();
       setUser(userData);
     } catch (error) {
+      posthog.captureException(error, { scope: "Failed to load user data" });
       setUser(null);
     }
     setInitialLoad(false);

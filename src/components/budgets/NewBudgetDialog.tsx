@@ -8,6 +8,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import * as v from "valibot";
+import { usePostHog } from "posthog-js/react";
 
 import { useBudgets } from "@app/hooks/useBudgets";
 import { useTags } from "@app/hooks/useTags";
@@ -52,6 +53,7 @@ export function NewBudgetDialog({ isOpen, close }: NewBudgetDialogProps) {
   const { tags } = useTags();
   const { createBudget } = useBudgets();
   const { addLoader, removeLoader } = useLoader();
+  const posthog = usePostHog();
 
   const tagsOptions = tags.map((t) => ({ id: t.id, label: t.name }));
 
@@ -91,6 +93,7 @@ export function NewBudgetDialog({ isOpen, close }: NewBudgetDialogProps) {
       close();
     } catch (error) {
       console.error("Failed to create budget", error);
+      posthog.captureException(error, { scope: "Failed to create new budget" });
       const errorMessage = getErrorMessage(error, "Erro ao criar orçamento");
       setFormError(setError, ["name", "maxValue", "tags"], errorMessage);
     }

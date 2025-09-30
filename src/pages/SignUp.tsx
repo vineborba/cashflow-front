@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import * as v from "valibot";
+import { usePostHog } from "posthog-js/react";
 
 import { Button } from "@app/components/Button";
 import { Input } from "@app/components/Input";
@@ -52,6 +53,7 @@ const LOADER_ID = "sign-up";
 export function SignUp() {
   const { addLoader, removeLoader, isLoading } = useLoader();
   const navigate = useNavigate();
+  const posthog = usePostHog();
 
   const {
     register,
@@ -70,6 +72,7 @@ export function SignUp() {
       await authService.signUp(data.name, data.email, data.password);
     } catch (error) {
       console.error("Failed to sign up", error);
+      posthog.captureException(error, { scope: "Failed to sign up" });
       const errorMessage = getErrorMessage(error, "Erro ao criar conta");
       setFormError(
         setError,

@@ -8,6 +8,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import * as v from "valibot";
+import { usePostHog } from "posthog-js/react";
 
 import { useTags } from "@app/hooks/useTags";
 import { useAccounts } from "@app/hooks/useAccounts";
@@ -73,6 +74,7 @@ export function NewTransactionDialog({
   const { accounts } = useAccounts();
   const { tags } = useTags();
   const { addLoader, removeLoader } = useLoader();
+  const posthog = usePostHog();
 
   const tagsOptions = tags.map((t) => ({ id: t.id, label: t.name }));
   const accountsOptions = accounts.map((a) => ({
@@ -131,6 +133,9 @@ export function NewTransactionDialog({
       close();
     } catch (error) {
       console.error("Failed to create transaction", error);
+      posthog.captureException(error, {
+        scope: "Failed to create new transaction",
+      });
       const errorMessage = getErrorMessage(error, "Erro ao criar transação");
       setFormError(
         setError,
