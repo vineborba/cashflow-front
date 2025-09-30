@@ -42,6 +42,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const userData = await userService.loadUserData();
       setUser(userData);
+      posthog.identify(userData.id, {
+        email: userData.email,
+        name: userData.name,
+      });
     } catch (error) {
       posthog.captureException(error, { scope: "Failed to load user data" });
       setUser(null);
@@ -61,6 +65,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function signOut() {
     await authService.signOut();
     setUser(null);
+    posthog.reset();
   }
 
   const contextValue = {
