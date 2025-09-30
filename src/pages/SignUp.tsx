@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import * as v from "valibot";
@@ -47,8 +47,11 @@ const signUpSchema = v.pipe(
 
 type SignUpForm = v.InferOutput<typeof signUpSchema>;
 
+const LOADER_ID = "sign-up";
+
 export function SignUp() {
-  const { addLoader, removeLoader } = useLoader();
+  const { addLoader, removeLoader, isLoading } = useLoader();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -62,7 +65,7 @@ export function SignUp() {
   });
 
   async function onSubmit(data: SignUpForm) {
-    addLoader("sign-up");
+    addLoader(LOADER_ID);
     try {
       await authService.signUp(data.name, data.email, data.password);
     } catch (error) {
@@ -74,7 +77,8 @@ export function SignUp() {
         errorMessage,
       );
     }
-    removeLoader("sign-up");
+    removeLoader(LOADER_ID);
+    navigate("/sign-up-successful");
   }
 
   return (
@@ -136,7 +140,11 @@ export function SignUp() {
               },
             })}
           />
-          <Button type="submit" size="full" disabled={!isValid}>
+          <Button
+            type="submit"
+            size="full"
+            disabled={isLoading(LOADER_ID) || !isValid}
+          >
             Confirmar
           </Button>
           <span className="block text-center">
