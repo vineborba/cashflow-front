@@ -1,12 +1,15 @@
 import { useState } from "react";
 
+import { useTags } from "@app/hooks/useTags";
+import { useAccounts } from "@app/hooks/useAccounts";
+
 import { Button } from "@app/components/Button";
 import { PageTitle } from "@app/components/PageTitle";
 import { Input } from "@app/components/Input";
-import { useTags } from "@app/hooks/useTags";
 import { Select } from "@app/components/Select";
 import { TransactionsList } from "@app/components/transactions/TransactionsList";
 import { NewTransactionDialog } from "@app/components/transactions/NewTransactionDialog";
+import { NoAccountsGuide } from "@app/components/accounts/NoAccountsGuide";
 
 export default function Transactions() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -16,6 +19,7 @@ export default function Transactions() {
   const [tagQuery, setTagQuery] = useState("");
 
   const { tags } = useTags();
+  const { accounts } = useAccounts();
 
   const tagsOptions = [{ value: "", label: "Todas as categorias" }].concat(
     tags.map((tag) => ({
@@ -46,6 +50,8 @@ export default function Transactions() {
     setRangeQuery("");
   }
 
+  const hasAccounts = accounts.length > 0;
+
   return (
     <>
       <NewTransactionDialog
@@ -55,8 +61,18 @@ export default function Transactions() {
 
       <div className="mb-6 flex w-full flex-row justify-between">
         <PageTitle>Transações</PageTitle>
-        <Button onClick={() => setOpenDialog(true)}>Adicionar transação</Button>
+        <Button
+          onClick={() => setOpenDialog(true)}
+          disabled={!hasAccounts}
+          title={
+            !hasAccounts ? "Crie uma conta antes de adicionar transações" : ""
+          }
+        >
+          Adicionar transação
+        </Button>
       </div>
+
+      {!hasAccounts && <NoAccountsGuide />}
 
       <section className="mt-6 flex flex-col rounded-2xl border border-gray-300 p-2 lg:px-4">
         <h2 className="mb-2 text-xl font-semibold">Histórico de transações</h2>
