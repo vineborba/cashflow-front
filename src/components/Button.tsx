@@ -11,6 +11,7 @@ const variants = tv({
         "bg-black text-white active:bg-white active:text-black disabled:bg-gray-200",
       secondary:
         "bg-white text-black border border-black active:bg-black active:text-white disabled:border-gray-200 disabled:text-gray-200",
+      destructive: "bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300",
     },
     size: {
       full: "w-full block",

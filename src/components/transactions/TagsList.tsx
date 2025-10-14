@@ -1,9 +1,17 @@
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 
-export function TagsList({ tags }: { tags: string[] }) {
+export function TagsList({
+  tags,
+  className = "text-left",
+}: {
+  tags: string[];
+  className?: string;
+}) {
   if (!tags.length) {
     return (
-      <p className="text-left text-xs font-semibold md:text-sm lg:text-base">
+      <p
+        className={`${className} text-xs font-semibold md:text-sm lg:text-base`}
+      >
         Sem categoria
       </p>
     );
@@ -11,7 +19,9 @@ export function TagsList({ tags }: { tags: string[] }) {
 
   if (tags.length === 1) {
     return (
-      <p className="text-left text-xs font-semibold md:text-sm lg:text-base">
+      <p
+        className={`${className} text-xs font-semibold md:text-sm lg:text-base`}
+      >
         {tags[0]}
       </p>
     );
@@ -22,7 +32,7 @@ export function TagsList({ tags }: { tags: string[] }) {
       <PopoverButton className="cursor-pointer">
         <p
           key={tags[0]}
-          className="text-left text-xs font-semibold md:text-sm lg:text-base"
+          className={`${className} text-xs font-semibold md:text-sm lg:text-base`}
         >
           {tags[0]} +{tags.length - 1}
         </p>

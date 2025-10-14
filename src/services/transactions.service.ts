@@ -30,4 +30,8 @@ export const transactionsService = {
 
     return data;
   },
+
+  deleteTransaction: async (id: string) => {
+    await apiClient.delete(`transactions/${id}`);
+  },
 };

@@ -44,6 +44,14 @@ export const useTransactions = ({
     },
   });
 
+  const { mutateAsync: deleteTransaction, error: deleteError } = useMutation({
+    mutationFn: transactionsService.deleteTransaction,
+    onSuccess: () => {
+      // Invalidate all transaction queries to ensure consistency
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+    },
+  });
+
   return {
     transactions: data?.data || [],
     pagination: data?.pagination || { total: 0, pages: 0 },
@@ -52,5 +60,7 @@ export const useTransactions = ({
     refetchTransactions: refetch,
     createTransaction: mutateAsync,
     createTransactionError: createError,
+    deleteTransaction,
+    deleteTransactionError: deleteError,
   };
 };

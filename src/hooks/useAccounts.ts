@@ -26,6 +26,17 @@ export const useAccounts = () => {
     },
   });
 
+  const { mutateAsync: deleteAccount, error: deleteError } = useMutation({
+    mutationFn: accountsService.deleteAccount,
+    onSuccess: (_, deletedId) => {
+      queryClient.setQueryData<Account[]>(["accounts"], (state) => {
+        if (!state) return [];
+
+        return state.filter((account) => account.id !== deletedId);
+      });
+    },
+  });
+
   return {
     accounts: data,
     isLoadingAccounts: isLoading,
@@ -33,5 +44,7 @@ export const useAccounts = () => {
     refetchAccount: refetch,
     createAccount: mutateAsync,
     createAccountError: createError,
+    deleteAccount,
+    deleteAccountError: deleteError,
   };
 };

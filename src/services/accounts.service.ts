@@ -14,4 +14,8 @@ export const accountsService = {
 
     return data;
   },
+
+  async deleteAccount(id: string) {
+    await apiClient.delete(`accounts/${id}`);
+  },
 };

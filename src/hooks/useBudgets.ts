@@ -25,6 +25,17 @@ export const useBudgets = () => {
     },
   });
 
+  const { mutateAsync: deleteBudget, error: deleteError } = useMutation({
+    mutationFn: budgetsService.deleteBudget,
+    onSuccess: (_, deletedId) => {
+      queryClient.setQueryData<Budget[]>(["budgets"], (state) => {
+        if (!state) return [];
+
+        return state.filter((budget) => budget.id !== deletedId);
+      });
+    },
+  });
+
   return {
     budgets: data,
     isLoadingBudgets: isLoading,
@@ -32,5 +43,7 @@ export const useBudgets = () => {
     refetchBudgets: refetch,
     createBudget: mutateAsync,
     createBudgetError: createError,
+    deleteBudget,
+    deleteBudgetError: deleteError,
   };
 };

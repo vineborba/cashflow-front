@@ -14,7 +14,7 @@ export default function Budgets() {
       <NewBudgetDialog isOpen={openDialog} close={() => setOpenDialog(false)} />
 
       <div className="mb-6 flex w-full flex-row justify-between">
-        <PageTitle>Contas</PageTitle>
+        <PageTitle>Orçamentos</PageTitle>
         <Button onClick={() => setOpenDialog(true)}>Criar orçamento</Button>
       </div>
 
