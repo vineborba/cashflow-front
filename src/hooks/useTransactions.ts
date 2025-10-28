@@ -2,6 +2,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { transactionsService } from "../services/transactions.service";
 
+type TransactionQuery = {
+  data: Transaction[];
+  pagination: {
+    total: number;
+    pages: number;
+  };
+};
+
 export const useTransactions = ({
   description = "",
   tag = "",
@@ -33,12 +41,19 @@ export const useTransactions = ({
   const { mutateAsync, error: createError } = useMutation({
     mutationFn: transactionsService.createTransaction,
     onSuccess: (data) => {
-      queryClient.setQueryData<Transaction[]>(
+      queryClient.setQueryData<TransactionQuery>(
         ["transactions", { description, tag, type, range, page, limit }],
         (state) => {
-          if (!state) return [data];
+          if (!state)
+            return { data: [data], pagination: { total: 1, pages: 1 } };
 
-          return [data, ...state];
+          return {
+            data: [data, ...state.data],
+            pagination: {
+              total: state.pagination.total + 1,
+              pages: Math.ceil((state.pagination.total + 1) / limit),
+            },
+          };
         },
       );
     },
