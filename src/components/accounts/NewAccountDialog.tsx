@@ -16,6 +16,7 @@ import { getErrorMessage, setFormError } from "@app/utils/errorHandling";
 import { useLoader } from "@app/contexts/Loader";
 
 import { Select } from "../Select";
+import { FilterableSelect } from "../FilterableSelect";
 import { Button } from "../Button";
 import { CurrencyMaskedInput } from "../CurrencyMaskedInput";
 import { Input } from "../Input";
@@ -68,6 +69,8 @@ export function NewAccountDialog({ isOpen, close }: NewAccountDialogProps) {
     setError,
     clearErrors,
     reset,
+    setValue,
+    watch,
     formState: { errors, isValid },
   } = useForm<NewAccountForm>({
     resolver: valibotResolver(newAccountSchema),
@@ -77,6 +80,8 @@ export function NewAccountDialog({ isOpen, close }: NewAccountDialogProps) {
       balance: "0",
     },
   });
+
+  const bankValue = watch("bank");
 
   async function onSubmit(data: NewAccountForm) {
     addLoader("create-account");
@@ -131,17 +136,18 @@ export function NewAccountDialog({ isOpen, close }: NewAccountDialogProps) {
                 },
               })}
             />
-            <Select
+            <FilterableSelect
               options={banksOptions}
               label="Banco"
+              placeholder="Digite para buscar um banco..."
               error={errors.bank?.message}
-              {...register("bank", {
-                onChange: () => {
-                  if (errors.bank?.type === "manual") {
-                    clearErrors(["description", "bank", "type", "balance"]);
-                  }
-                },
-              })}
+              value={bankValue}
+              onChange={(value) => {
+                setValue("bank", value);
+                if (errors.bank?.type === "manual") {
+                  clearErrors(["description", "bank", "type", "balance"]);
+                }
+              }}
             />
             <Select
               options={ACCOUNT_TYPES_OPTIONS}

@@ -152,7 +152,7 @@ export function NewTransactionDialog({
       <div className="fixed inset-0 flex w-screen items-center justify-center p-2 md:p-4">
         <DialogPanel className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 md:p-8">
           <DialogTitle className="font-bold">Registrar transação</DialogTitle>
-          <Description>Insira os dados da sua tranasção</Description>
+          <Description>Insira os dados da sua transação</Description>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input
