@@ -58,7 +58,7 @@ type NewAccountForm = v.InferOutput<typeof newAccountSchema>;
 export function NewAccountDialog({ isOpen, close }: NewAccountDialogProps) {
   const { createAccount } = useAccounts();
   const { banks } = useBanks();
-  const { addLoader, removeLoader } = useLoader();
+  const { addLoader, removeLoader, isLoading } = useLoader();
   const posthog = usePostHog();
 
   const banksOptions = banks.map((b) => ({ value: b.code, label: b.name }));
@@ -179,7 +179,10 @@ export function NewAccountDialog({ isOpen, close }: NewAccountDialogProps) {
               <Button onClick={close} variant="secondary">
                 Cancelar
               </Button>
-              <Button type="submit" disabled={!isValid}>
+              <Button
+                type="submit"
+                disabled={!isValid || isLoading("create-account")}
+              >
                 Confirmar
               </Button>
             </div>

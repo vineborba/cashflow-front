@@ -52,7 +52,7 @@ type NewBudgetForm = v.InferOutput<typeof newBudgetSchema>;
 export function NewBudgetDialog({ isOpen, close }: NewBudgetDialogProps) {
   const { tags } = useTags();
   const { createBudget } = useBudgets();
-  const { addLoader, removeLoader } = useLoader();
+  const { addLoader, removeLoader, isLoading } = useLoader();
   const posthog = usePostHog();
 
   const tagsOptions = tags.map((t) => ({ id: t.id, label: t.name }));
@@ -159,7 +159,10 @@ export function NewBudgetDialog({ isOpen, close }: NewBudgetDialogProps) {
               <Button onClick={close} variant="secondary">
                 Cancelar
               </Button>
-              <Button type="submit" disabled={!isValid}>
+              <Button
+                type="submit"
+                disabled={!isValid || isLoading("create-budget")}
+              >
                 Confirmar
               </Button>
             </div>

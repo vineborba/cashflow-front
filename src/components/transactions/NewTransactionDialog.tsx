@@ -73,7 +73,7 @@ export function NewTransactionDialog({
   const { createTransaction } = useTransactions();
   const { accounts } = useAccounts();
   const { tags } = useTags();
-  const { addLoader, removeLoader } = useLoader();
+  const { addLoader, removeLoader, isLoading } = useLoader();
   const posthog = usePostHog();
 
   const tagsOptions = tags.map((t) => ({ id: t.id, label: t.name }));
@@ -288,7 +288,10 @@ export function NewTransactionDialog({
               <Button onClick={close} variant="secondary">
                 Cancelar
               </Button>
-              <Button type="submit" disabled={!isValid}>
+              <Button
+                type="submit"
+                disabled={!isValid || isLoading("create-transaction")}
+              >
                 Confirmar
               </Button>
             </div>
