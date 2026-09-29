@@ -1,69 +1,66 @@
-# React + TypeScript + Vite
+# Cashflow Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Web client for **Cashflow**, a personal finance app: bank accounts,
+transactions, tags and monthly budgets. Built as my undergraduate capstone
+project (TCC) in Information Systems.
 
-Currently, two official plugins are available:
+It's a React SPA served as static assets from **Cloudflare Workers**, talking to
+[cashflow-api](https://github.com/vineborba/cashflow-api) (Hono + Turso, also
+on Workers).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Stack
 
-## Expanding the ESLint configuration
+- **React 19** with the **React Compiler**, TypeScript, **Vite**
+- **Tailwind CSS v4** + `tailwind-variants` for component variants, **Headless UI** for accessible dialogs, listboxes and menus
+- **TanStack Query** for server state (one hook per resource in `src/hooks`)
+- **React Hook Form** + **Valibot** for forms and validation
+- **React Router v7** with lazy-loaded pages and protected routes
+- **ky** as the HTTP client, **PostHog** for product analytics and error tracking
+- **Wrangler** for deployment
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default tseslint.config([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+- Sign-up with email activation, sign-in and protected routes
+- Dashboard with account balances and a transactions summary
+- Accounts linked to Brazilian banks
+- Transactions with tags, filters by period and category, and pagination
+- Monthly budgets grouped by tags, with a spending meter for each
+- Currency input and formatting in BRL, responsive layout with a drawer menu
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Project structure
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```
+src/
+  pages/        route-level screens (lazy-loaded)
+  components/   shared UI plus per-feature folders (accounts, budgets, transactions)
+  hooks/        TanStack Query hooks, one per API resource
+  services/     typed API calls on top of a single ky client
+  contexts/     auth and global loading state
+  @types/       domain types
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Design notes
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+- **Auth** relies on the API's `httpOnly` cookie (`credentials: "include"`), so
+  no token is ever stored in JavaScript-accessible storage.
+- **Errors** from the API are normalised in one place (`services/client`) and
+  surfaced to forms and alerts consistently.
+- **Performance**: pages are code-split with `React.lazy`, and the React
+  Compiler handles memoisation instead of manual `useMemo`/`useCallback`.
 
-export default tseslint.config([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+## Running locally
+
+Requires Node.js, pnpm and a running [cashflow-api](https://github.com/vineborba/cashflow-api).
+
+```sh
+pnpm install
+cp .env.example .env   # set VITE_API_URL (and PostHog, optionally)
+pnpm dev
 ```
+
+| Variable | Purpose |
+|---|---|
+| `VITE_API_URL` | Base URL of the API |
+| `VITE_PUBLIC_POSTHOG_KEY`, `VITE_PUBLIC_POSTHOG_HOST` | PostHog project (optional) |
+
+Build with `pnpm build`, deploy with `pnpm deploy`.
